@@ -1,0 +1,112 @@
+% This is a copy version from https://github.com/thanhhungqb/thesis-template
+% * <thanhhungqb@gmail.com> 2017-05-09T23:23:15.758Z:
+%
+% ^.
+% Please do not modified this project, when you want to start writing, make a clone of it for your own (Please read README.md)
+
+\documentclass[12pt,a4paper,oneside]{book} % twoside for draf
+
+% \usepackage{babel}
+% \usepackage[utf8]{vietnam}
+\usepackage[english,spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+%\usepackage{times}
+%\usepackage{graphicx}
+
+\usepackage{mathptmx}	% same Time New Roma
+%\renewcommand{\rmdefault}{phv} % Arial
+%\renewcommand{\sfdefault}{phv} % Arial
+
+\usepackage{fancyhdr}
+\usepackage{array}
+\usepackage{amsmath,tabu}
+\usepackage{makecell}
+\usepackage{url}
+\usepackage{algorithm2e}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+
+% \usepackage{subcaption}
+\usepackage{subfigure}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{lipsum}
+
+%prevent to break long word
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+\usepackage{titlesec, blindtext, color}
+\definecolor{gray75}{gray}{0.75}
+\newcommand{\hsp}{\hspace{20pt}}
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter{.}\hsp}{0pt}{\Huge\bfseries}
+
+\usepackage{bkthesis}
+
+\crname{LUẬN VĂN TỐT NGHIỆP}
+\ctname{XÂY DỰNG MÔ HÌNH GAN\\TỪ ẢNH CHỤP CẮT LỚP VI TÍNH CT}
+\cstuname{SVTH: }
+
+\csCouncil{Khoa học máy tính}
+\csSupervise{}
+\csReviewer{}
+\cttime{6/2019}
+
+
+\thesislayout
+
+\begin{document}
+%-	Bìa cứng - màu xanh dương, chữ mạ vàng (xem mẫu đính kèm)
+%-	Trang tên (tờ lót): chất liệu giấy, nội dung giống như bìa LV
+%-	Ở gáy LV: in nhan đề LV (có thể in tóm tắt nếu nhan đề quá dài), size 15 – 17
+%-	Phiếu Nhiệm vụ LV, chấm điểm Hướng dẫn & Phản biện (đã ký): nhận từ GVHD & GVPB sau khi bảo vệ (theo lịch hẹn).
+%-	Lời cam đoan
+%-	Lời cảm ơn/ Lời ngỏ
+%-	Tóm tắt LV
+%-	Mục lục
+%-	Danh mục, bảng biểu, hình ảnh, ... (nếu có)
+%-	Nội dung LV
+%-	Danh mục TL tham khảo
+%-	Phụ lục (nếu có)
+
+\coverpage
+
+\frontmatter
+
+	
+\tableofcontents
+% \listofsymbols
+\listoftables
+\listoffigures
+% \listofalgorithms
+
+
+\mainmatter
+
+\fancyhead{}  % Clears all page headers and footers
+%\rhead{\thepage}  % Sets the right side header to show the page number
+%\lhead{}  % Clears the left side page header
+%\fancyfoot[positions]{footer}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\pagestyle{fancy}  % Finally, use the "fancy" page style to implement the FancyHdr headers
+
+\input{chapter1.tex}
+\input{chapter2.tex}
+\input{chapter3.tex}
+\input{chapter4.tex}
+\input{chapter5.tex}
+\input{chapter6.tex}
+\input{chapter7.tex}
+\input{chapter8.tex}
+\input{chapter9.tex}
+\input{chapter10.tex}
+\bibliography{refs}{}
+\bibliographystyle{plainurl}
+%-	Danh mục TL tham khảo
+%-	Phụ lục (nếu có)
+
+\end{document}
