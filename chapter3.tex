@@ -19,8 +19,8 @@ Phương pháp tốt nhất hiện nay áp dụng cho các bài toán phân đo�
 \section{Mạng nơ-ron học sâu}
 Phần này chúng tôi sẽ trình bày lại quá trình phát triển của mạng nơ-ron học sâu và phần nào lý giải nguyên do cho sự bùng nổ ứng dụng của mạng nơ-ron trong thời điểm hiện tại. Nội dung được chúng tôi tham khảo tại \cite{basicdeep}.
 \subsection{Một số khái niệm cơ bản}
-Trước hết ta sẽ đi làm rõ các khái niệm như trí tuệ nhân tạo(Artificial Intelligence), học máy (Machine Learning) và học sâu(Deep Learning) viết tắt lần lượt là AI, ML và DL.\\
-Khi máy tính có khả năng thực hiện những việc mà có đặc trưng như trí thông minh con người thì ta có thể gọi đó là AI. Còn cái từ ML được sử dụng khi máy tính có khả năng học từ dữ liệu được lưu trữ mà không phải lập trình một cách cụ thể. DL là một trong những phương pháp của ML mà được phát triển và ứng dụng vào rất nhiều lĩnh vực nhờ vào tính ưu việt của nó. Ta minh họa ba khái niệm này trong Hình \ref{history}.
+Trước hết chúng tôi nhắc lại các khái niệm như trí tuệ nhân tạo(Artificial Intelligence), học máy (Machine Learning) và học sâu(Deep Learning) viết tắt lần lượt là AI, ML và DL.\\
+Khi máy tính có khả năng thực hiện những việc mà có đặc trưng như trí thông minh con người thì ta có thể gọi đó là trí tuệ nhân tạo. Khái niệm học máy được sử dụng khi máy tính có khả năng học từ dữ liệu được lưu trữ mà không phải lập trình một cách cụ thể. Học sâu là một trong những phương pháp của học máy sử dụng các mô hình mạng nơ-ron, ý tưởng chính dựa các nơ-ron và kết nối giữa chúng trong bộ não sinh học. Ta minh họa ba khái niệm này trong Hình \ref{history}.
 
 \begin{figure}[ht]
 \centering
@@ -70,20 +70,60 @@ Còn hàm lỗi thì chúng ta tự xây dựng và tự tối ưu miễn sao gi
 \item Từ đó tới nay, mạng học sâu được sử dụng một cách rộng rãi hơn, các sản phẩm sử dụng nó, các nhà nghiên cứu, người học đều tăng cao, đồng thời các công cụ hỗ trợ việc code và huấn luyện cũng tăng lên nhanh chóng.
 \end{itemize}
 
-\section{Mạng nơ-ron học sâu tích chập và ứng dụng cho xử lý ảnh}
-Các mạng nơ-ron truyền thống có thể giải những bài toán phức tạp với độ chính xác khá cao nhưng vấn đề chi phí đôi khi lại làm cho nó trở nên không khả thi. Đặc biệt sử dụng nó trong lĩnh vực xử lý ảnh. Ta lấy ví dụ một ảnh đầu vào có kích thước dài 128, rộng là 128 , ba giá trị màu là RGB sẽ có tới 128x128x3 = 49125 tham số cho mỗi bức ảnh. Hơn nữa các mạng nơ-ron phức tạp còn mắc phải vấn đề overfitting. Để giải quyết vấn đề này thì ta có khái niệm mạng nơ-ron tích chập (Convolutional Neural Networks hay ngắn gọn là CNN) là một dạng cải tiến của mạng nơ-ron nhân tạo. Mạng nơ-ron này bắt chước khả năng của con người là nhìn và phân tích. Ta sẽ đi vào phân tích một số đặc điểm của CNN để thấy rõ điều này.
+\section{Mạng nơ-ron học sâu tích chập và ứng dụng cho phân đoạn ảnh}
+Các mạng nơ-ron truyền thống có thể giải những bài toán phức tạp với độ chính xác khá cao nhưng vấn đề chi phí đôi khi lại làm cho nó trở nên không khả thi. Đặc biệt sử dụng nó trong lĩnh vực xử lý ảnh. Ta lấy ví dụ một ảnh đầu vào có kích thước dài 128, rộng là 128 , ba giá trị màu là RGB sẽ có tới 128x128x3 = 49125 tham số cho mỗi lớp mạng để xử lý bức ảnh này. Hơn nữa các mạng nơ-ron phức tạp còn mắc phải vấn đề overfitting. Để giải quyết vấn đề này thì ta có khái niệm mạng nơ-ron tích chập (Convolutional Neural Networks hay ngắn gọn là CNN) là một dạng cải tiến của mạng nơ-ron nhân tạo. Ta sẽ đi vào phân tích một số đặc điểm của CNN để thấy rõ điều này.
 
-Toàn bộ kiến trúc CNN được minh họa như Hình \ref{cnn}.
+% Toàn bộ kiến trúc CNN được minh họa như Hình \ref{cnn}.
+
+% \begin{figure}[ht]
+% \centering
+%         \includegraphics[totalheight=9cm]{Images/cnn.png}
+%     \caption{Kiến trúc CNN\cite{accarchitect}}
+%     \label{cnn}
+% \end{figure}
+
+\subsection{Lớp tích chập}
+Trong xử lý ảnh và thị giác máy tính, người ta rõ hai khái niệm phép toán tích chập (convolution) và phép toán tương quan (correlation) qua điểm khác nhau duy nhất ở quá trình tính toán là đảo ngược ma trận lõi ở phép tích chập trước khi tính. Để dễ hình dung ta xem xét ví dụ sau đây với giá trị $I$ (độ dài $i$) và $K$ (đọ dài $k$):
+$$ I = [1, 2, 3, 4, 5, 6, 7, 8, 9]$$
+$$ K = [2, 4, 6] $$
+Thì kết quả của phép tính tương quan được tính như sau:
+$$ Correlation(I,K)_{c = \overline{0, i - k - 1}} = \sum_{m=c}^{c + k-1}I_{m}*K_{m-c}$$
+$$ Correlation(I,K) = [1*2 + 2*4 + 3*6, ... , 7*2 + 8*4 + 9*6] $$
+$$ Correlation(I,K) = [28,  40,  52,  64,  76,  88, 100] $$
+Và kết quả của phép tính tích chập được tính như sau:
+$$ Convolution(I,K)_{c = \overline{0, i - k - 1}} = \sum_{m=c}^{c + k-1}I_{m}*K_{k - 1 - m + c}$$
+$$ Convolution(I,K) = [1*6 + 2*4 + 3*2, ... , 7*6 + 8*4 + 9*2] $$
+$$ Convolution(I,K) = [20, 32, 44, 56, 68, 80, 92] $$
+Công thức tương tự khi I, K là các ma trận 2, 3 chiều. Để dễ hình dung ta xem hình minh hoạ \ref{convExample}.
 
 \begin{figure}[ht]
 \centering
-        \includegraphics[totalheight=9cm]{Images/cnn.png}
-    \caption{Kiến trúc CNN\cite{accarchitect}}
-    \label{cnn}
+        \includegraphics[totalheight=7cm]{Images/convExample.png}
+    \caption{Phép tính tương quan trong xử lý ảnh}
+    \label{convExample}
+\end{figure}
+Ta có thể thấy ở phép tính tương quan trên ma trận, tuỳ vào ma trận nhân $K$ mà ma trận kết quả sẽ có được một số tính chất đặt biệt, ví dụ ở hình \ref{convExample} ta sẽ nhận được ma trận kết quả làm nổi bật các cạnh dọc ở ma trận gốc. Điều tương tự cũng xảy ra với kết quả của phép tính tích chập vì hai phép tính này là gần giống nhau ở cách tính. Trong các phép tính xử lý ảnh, tuỳ vào tình huống mà người ta sử dụng phép tích chập hoặc phép tính tương quan để nhầm đạt được độ lợi về thời gian tính toán khi tính áp dụng các tính chất kết hợp lên một dãy các phép tính tích chập (tương quan) liên tục\cite{convtheorem}.\\
+Tuy nhiên ở các mạng học sâu, lớp tích chập và phép tính tích chập được dùng để chỉ phép tính tương quan. Các nên tảng học sâu được hỗ trợ như Tensorflow sử dụng từ khoá tích chập và lớp tích chập để chỉ phép tính tương quan trong xử lý ảnh. Vì như đã nói ý nghĩa của hai phép tính này là như nhau, tuỳ vào độ lợi tính toán mà người ta sẽ quyết định sử dụng phép tính nào.\\
+Khi sử dụng lớp tích chập thay cho lớp kết nối đầy đủ ở mạng học sâu sẽ có một số khác biệt sau:
+\begin{itemize}
+    \item Bộ nhớ tính toán sử dụng các lớp tích chập sẽ nhỏ hơn.
+    \item Thời gian tính toán khi sử dụng các lớp tích chập sẽ nhanh hơn.
+    \item Ở những lớp càng sâu, một điểm dữ liệu khi sử dụng các lớp tích chập sẽ bị ảnh hưởng bới nhiều điểm dữ liệu đầu vào hơn thay vì là như nhau ở tất cả các lớp.
+\end{itemize}
+
+\subsection{Lớp gộp}
+Lớp gộp (pooling), đôi khi được gọi là lớp giảm kích thước mẫu (sub-sampling), thường được sử dụng sau một số lớp tích chập nhất định. Ta có thể thấy sau khi qua một số lớp tích chập nhất định, ảnh thường sẽ có hiện tượng bị nhoè do những điểm ảnh gần nhau có giá trị gần giống nhau. Lớp gộp này đóng vai trò làm giảm kích thước ảnh nhưng vẫn đảm bảo giữ lại các dữ liệu cần thiết nhằm qua đó làm giảm số lượng phép tính toán và tránh tình trạng quá khớp (overfitting).\\
+Lớp gộp có thể sử dụng nhiều loại hàm gộp khác nhau như hàm trung bình hoặc hàm lấy lớn nhất (phổ biến) tuỳ thuộc vào đặc điểm của bài toán. Các lớp gộp này thường có kích thước bằng với độ cách (stride), tức là chúng sẽ có ý nghĩa như một phép thay thế một vùng các điểm dữ liệu chỉ bằng một điểm dữ liệu duy nhất, và các vùng này không có điểm trùng.\\
+Ta có thể thấy sau khi qua một lớp gộp, các vùng khác nhau sẽ nằm gần nhau hơn và nhờ vậy với lớp tính tích chập tiếp theo sẽ có được thông tin của một vùng lớn hơn ở ảnh ban đầu. Vì vậy sau khi qua càng nhiều lớp gộp, ảnh (đặc trưng) sẽ có ý nghĩa toàn cục hơn là ý nghĩa chi tiết. Đây cũng là một yếu điểm của lớp gộp cho bài toán phân đoạn ảnh mà không thay đổi kích thước của nó.
+
+\begin{figure}[ht]
+\centering
+        \includegraphics[totalheight=4cm]{Images/MaxpoolSample2.png}
+    \caption{Phép tính gộp lấy lớn nhất với kích thước 2, độ cách 2}
+    \label{poolExample}
 \end{figure}
 
-\subsection{Phép toán tương quan}
-Cho  một  ảnh  đầu  vào $I_9$  và  ma  trận )  có  kích  thước ). Trường trường hợp tổng quát thì kích thước của ) không nhất thiết là vuông. 
+\subsection{Lớp đảo tích chập}
 
 \section{Các chỉ số đánh giá kết quả phân đoạn}
 Kết quả phân đoạn có thể được đánh giá bằng nhiều cách khác nhau. Đối với một bài toán nhất định, mỗi chỉ số đánh giá được lựa chọn cần phải nhạy cảm với một số đặc điểm phụ thuộc vào mục đích bài toán đó. Nếu bài toán để xác định thể tích vật thể, sai khác thể tích sẽ là chỉ số tiên quyết cho bài toán đó. Tuy nhiên với một kết quả phân đoạn cho ra thể tích chính xác hoàn toàn trên lý thuyết vẫn có thể bị sai hoàn toàn nếu như sử dụng chỉ số trùng giao trên hợp của voxel. Vì vậy, mỗi bài toán phải luôn dùng nhiều chỉ số phân đoạn khác nhau để đánh giá các giải pháp cho bài toán đó.\\
@@ -93,7 +133,7 @@ Các chỉ số được chúng tôi sử dụng bao gồm:
     \item Chỉ số lỗi thể tích (Volumetric overlap error - VOE), giá trị phần trăm. Chỉ số này được tính như sau: lấy tổng số voxel giao giữa dự đoán và nhãn chia cho tổng số voxel hợp giữa dự đoán và nhãn, lấy 1 trừ kết quả đó rồi nhân cho 100.
     \item Chỉ số sai khác thể tích tuyệt đối (Relative absolute volume difference - VD), giá trị phần trăm. Chỉ số này được tính bằng hiệu số thể tích của phép phân đoạn và nhãn, chia cho nhãn, nhân 100. Chỉ số này nhận giá trị âm khi thể tích phân đoạn nhỏ hơn thể tích nhãn và nhận giá trị dương khi thể tích phân đoạn lớn hơn thể tích nhãn. Lưu ý chỉ số này có thể đạt điểm 100 khi kết quả phân đoạn không trùng với nhãn.
     \item Khoảng cách mặt đối xứng trung bình (Average symmetric surface distance - AvgD), giá trị milimet. Voxel cạnh của vật thể là voxel có ít nhất 1 trong 18 láng giềng không thuộc vật thể. Khoảng cách mỗi voxel tới bề mặt là khoảng cách ngắn nhất từ voxel đó đến một voxel thuộc bề mặt. Khoảng cách trung bình giữa hai bề mặt là giá trị trung bình của tất cả các voxel tới bề mặt kia (voxel thuộc dự đoán tới bề mặt nhãn, voxel thuộc nhãn tới bề mặt dự đoán).
-    \item Khoảng cách mặt đối xứng bình phương từ gốc (Root Mean Square symmetric surface distance - RMSD), giá trị milimet. Giá trị này được tính giống với  AvgD nhưng khoảng cách ban đầu sẽ được trừ cho trung bình rồi bình phương lên và lấy trung bình.
+    \item Khoảng cách mặt đối xứng bình phương từ gốc (Root Mean Square symmetric surface distance - RMSD), giá trị milimet. Giá trị này được tính giống với  AvgD nhưng khoảng cách ban đầu sẽ được bình phương lên và lấy trung bình.
     \item Khoảng cách mặt lớn nhất (Maximum symmetric surface distance - MaxD), giá trị milimet. Chỉ số này tính giống AD nhưng thay vì lưu trung bình sẽ lưu giá trị lớn nhất.
 \end{itemize}
 Lưu ý các chỉ số trên là các chỉ số lỗi, càng thấp tức là kết quả phân đoạn càng tốt. Điểm cho mỗi chỉ số sẽ bằng 100 trừ đi chỉ số nhân với một hệ số đã xác định, và lấy lớn hơn với 0. \\
