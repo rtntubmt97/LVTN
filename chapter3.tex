@@ -16,11 +16,15 @@ Một số kỹ thuật phân đoạn ảnh cơ bản có thể kể đến như
 \textbf{Nhận xét:} Những phương pháp này có thể gọi là những phương pháp cổ điển để phân đoạn ảnh. Đặc điểm chung của nó là việc thực hiện nhanh chỉ qua vài phép toán biến đổi. Còn nhược điểm là bị sai nhiều khi các đối tượng trên ảnh không có sự khác nhau rõ ràng về màu sắc, mức xám. Việc sử dụng các phương pháp này chỉ để nghiên cứu và đánh giá hoặc công cụ hỗ trợ còn để ứng dụng vào thực tế thì vẫn rất hạn chế vì với các bài toán phức tạp thì các phương pháp này không thể đáp ứng được. Chúng ta có thể tìm hiểu thêm về các phương pháp này tại đây.\cite{segoverview}\\
 Phương pháp tốt nhất hiện nay áp dụng cho các bài toán phân đoạn ảnh phức tạp là mạng học sâu. Tuy rằng chi phí để hiện thực và chạy mạng học sâu rất cao nhưng với các công cụ hỗ trợ hiện nay kết hợp với việc tận dụng được hiệu năng của GPU của mạng học sâu thì ngày nay nó được sử dụng rất nhiều và mang lại những kết quả vượt ngoài sức mong đợi. Và để giải thích cho điều này thì bên dưới sẽ trình bày chi tiết về mạng học sâu bao gồm cơ sở lý thuyết, trình bày và đánh giá một số mô hình trong mạng học sâu và một số kết quả mà nhóm đã làm được khi sử dụng nó.
 
-\section{Mạng nơ-ron học sâu}
-Phần này chúng tôi sẽ trình bày lại quá trình phát triển của mạng nơ-ron học sâu và phần nào lý giải nguyên do cho sự bùng nổ ứng dụng của mạng nơ-ron trong thời điểm hiện tại. Nội dung được chúng tôi tham khảo tại \cite{basicdeep}.
-\subsection{Một số khái niệm cơ bản}
-Trước hết chúng tôi nhắc lại các khái niệm như trí tuệ nhân tạo(Artificial Intelligence), học máy (Machine Learning) và học sâu(Deep Learning) viết tắt lần lượt là AI, ML và DL.\\
-Khi máy tính có khả năng thực hiện những việc mà có đặc trưng như trí thông minh con người thì ta có thể gọi đó là trí tuệ nhân tạo. Khái niệm học máy được sử dụng khi máy tính có khả năng học từ dữ liệu được lưu trữ mà không phải lập trình một cách cụ thể. Học sâu là một trong những phương pháp của học máy sử dụng các mô hình mạng nơ-ron, ý tưởng chính dựa các nơ-ron và kết nối giữa chúng trong bộ não sinh học. Ta minh họa ba khái niệm này trong Hình \ref{history}.
+\section{Lịch sử và những kiến thức cơ bản về mạng học sâu}
+Phần này chúng tôi sẽ trình bày lại quá trình phát triển của mạng nơ-ron học sâu và phần nào lý giải nguyên do cho sự bùng nổ ứng dụng của mạng nơ-ron trong thời điểm hiện tại. Nội dung được chúng tôi tham khảo tại \cite{basicdeep}.\\
+Trước hết chúng tôi nhắc lại các khái niệm như trí tuệ nhân tạo(Artificial Intelligence), học máy (Machine Learning) và học sâu(Deep Learning) viết tắt lần lượt là AI, ML và DL.
+\begin{itemize}
+    \item Khi máy tính có khả năng thực hiện những việc mà có đặc trưng như trí thông minh con người thì ta có thể gọi đó là trí tuệ nhân tạo.
+    \item Khi máy tính có khả năng học từ dữ liệu được lưu trữ mà không phải lập trình một cách cụ thể thì đó là học máy.
+    \item Học sâu là một trong những phương pháp của học máy sử dụng các mô hình mạng nơ-ron, ý tưởng chính dựa theo kiến trúc nơ-ron trong bộ não sinh học và các kết nối giữa chúng.
+\end{itemize}
+ Ta minh họa ba khái niệm này trong Hình \ref{history}.
 
 \begin{figure}[ht]
 \centering
@@ -29,8 +33,7 @@ Khi máy tính có khả năng thực hiện những việc mà có đặc trưn
     \label{history}
 \end{figure}
 
-\subsection{Lịch sử deep learning và những kiến thức cơ bản về nó}
-\textbf{Giải thuật Perceptron Learning Algorithm(PLA)}
+\subsection{Giải thuật Perceptron Learning Algorithm(PLA)}
 \begin{itemize}
 \item PLA là nền móng đầu tiên của DL, nó được ra đời vào năm 1957 bởi Frank Rosenblatt giải bài toán về phân lớp nhị phân. Vì nó là nền móng nên hiểu được cách hoạt động của giải thuật này sẽ hiểu được cơ bản về DL. Vì sau này khi phát triển lên người ta chỉ cả tiến nó chứ không phải thay thế.
 \item Yêu cầu của bài toán đặt ra là tìm phương trình một đường thẳng phân hai lớp đã được gán nhãn nằm về hai phía của đường thẳng đó, gọi là class 1 và class 2. Ý tưởng cơ bản của PLA là dự đoán, xây hàm mất mát, dựa vào hàm mất mát để đánh giá dự đoán và cập nhật lại dự đoán mới khi nào tốt thì dừng lại.
@@ -55,14 +58,14 @@ Nhận thấy khi $w_{t}^T$$x_{i}$ và $y_{i}$ trái dấu, khi cập nhật l�
 \item Với $z = w^{T}x$, ta có $y=sgn(z)$ là output của mạng. Hàm $sgn()$ được gọi là activation function.
 Còn hàm lỗi thì chúng ta tự xây dựng và tự tối ưu miễn sao giải thuật có hiệu quả.
 \end{itemize}
-\textbf{MLP và Backpropagaion}
+\subsection{MLP và Backpropagaion}
 \begin{itemize}
 \item Mặc dù PLA mang lại nhiều triển vọng lúc mới ra đời nhưng về bản chất thì nó không thể giải quyết được với tập dữ liệu phi tuyến và nó được chứng minh trong cuốn sách Perceptrons, điều này làm cho giải thuật này không phát triển được thêm trong hai mươi năm. Thời kỳ này còn được gọi là mùa đông AI thứ nhất(The first AI winter).
 \item Mãi tới năm 1986, Geoffrey Hinton cùng cộng sự viết một bài báo có tên Learning representations by back propagating error chứng minh được rằng mạng nơ-ron với nhiều lớp ở giữa(gọi là hidden layer) có thể biểu diễn được các quan hệ phi tuyến với quy trình gọi là backpropagation và sau mỗi lớp là một hàm kích hoạt phi tuyến sigmoid hoặc tanh. Lúc này nó được gọi là Multi-layer Perceptron(MLP).
 \item MLP cải tiến thêm chỗ thay vì chỉ có hai lớp input và output như PLA thì nó sẽ có thêm nhiều hidden layer ở giữa. Mỗi node ở các lớp này gọi là một Unit, input của mỗi Unit sẽ là output của lớp trước đó qua activation function. Giá trị $z$ ở mỗi Unit sẽ cộng thêm một giá trị $b$ được gọi là bias. Với MLP thì giá trị $b$ này không cố định là $1$ mà nó sẽ thay đổi trong quá trình học, qua các lớp, trên từng Unit.
 \item Backpropagation là một phương pháp sử dụng để tối ưu hàm lỗi cho MLP, nó giúp tính gradient ngược từ lớp cuối cùng đến lớp đầu tiên dựa vào cách tính đạo hàm của hàm hợp. Nhờ đây mà mạng nơ-ron tiếp tục được phát triển cho tới khoảng 1990 do gặp phải vấn đề tiếp theo.
 \end{itemize}
-\textbf{Mùa đông AI thứ hai và sự ra đời của mạng học sâu}
+\subsection{Mùa đông AI thứ hai và sự ra đời của mạng học sâu}
 \begin{itemize}
 \item Vấn đề phi tuyến đã được giải quyết nhưng việc tối ưu hàm lỗi của mạng nơ-ron quá phức tạp khi gặp bài toán khó và dữ liệu đầu vào lớn vì nó không phải là một hàm lồi. Tiếp đến là việc các hidden layer mở rộng làm cho khả năng tính toán mất quá nhiều chi phí, làm cho việc huấn luyện không hiệu quả, và hơn nữa là vấn đề vanishing gradient (gradient bỏ qua những thành phần có đạo hàm =0). Những hạn chế này làm cho mạng nơ-ron bị thay thế dần bởi một giải thuật mới có tên là Support Vector Machine(SVM) trong giai đoạn 1990-2000. Giai đoạn này còn gọi là Mùa đông AI thứ hai.
 \item Tới 2006, mạng nơ-ron được cải tiến bởi Hinton với khái niệm autoencoder. Ta có thể hiểu khái niệm nay bằng cách xây dựng nó như sau. Xây dựng một autoencoder là xây dựng một mạng nơ-ron chỉ có một hidden layer, số Unit của hidden layer này ít hơn số input và output thì bằng với input. Ta sẽ huấn luyện mạng này sao cho giá trị output giống với giá trị input. Vì mạng chỉ có một hidden layer nên ta có thể gọi giai đoạn từ input tới hidden layer là mã hóa, còn từ hidden layer tới output là giải mã. Quá trình này thành công, ta sẽ bỏ đi output vì về bản chất thì hidden layer tuy ít node hơn nhưng vẫn mang đầy đủ tính chất của input. Ta tiếp tục xây dựng một autoencoder từ hidden layer này và cứ thế cho đến khi đạt được một mạng đủ sâu mà output của mạng này mang được những đặc điểm của input. Sau đó ta tiếp tục làm việc với output này theo yêu cầu bài toán. Việc này sẽ làm giảm thiếu rất nhiều vấn đề vanishing gradient. Từ ý tưởng này, mạng nơ-ron được cộng đồng tiếp tục đón nhận và cũng kể từ đây cái tên mạng học sâu(Deep Learning) ra đời.
@@ -71,7 +74,7 @@ Còn hàm lỗi thì chúng ta tự xây dựng và tự tối ưu miễn sao gi
 \end{itemize}
 
 \section{Mạng nơ-ron học sâu tích chập và ứng dụng cho phân đoạn ảnh}
-Các mạng nơ-ron truyền thống có thể giải những bài toán phức tạp với độ chính xác khá cao nhưng vấn đề chi phí đôi khi lại làm cho nó trở nên không khả thi. Đặc biệt sử dụng nó trong lĩnh vực xử lý ảnh. Ta lấy ví dụ một ảnh đầu vào có kích thước dài 128, rộng là 128 , ba giá trị màu là RGB sẽ có tới 128x128x3 = 49125 tham số cho mỗi lớp mạng để xử lý bức ảnh này. Hơn nữa các mạng nơ-ron phức tạp còn mắc phải vấn đề overfitting. Để giải quyết vấn đề này thì ta có khái niệm mạng nơ-ron tích chập (Convolutional Neural Networks hay ngắn gọn là CNN) là một dạng cải tiến của mạng nơ-ron nhân tạo. Ta sẽ đi vào phân tích một số đặc điểm của CNN để thấy rõ điều này.
+Các mạng nơ-ron truyền thống có thể giải những bài toán phức tạp với độ chính xác khá cao nhưng vấn đề chi phí đôi khi lại làm cho nó trở nên không khả thi. Đặc biệt sử dụng nó trong lĩnh vực xử lý ảnh. Ta lấy ví dụ một ảnh đầu vào có kích thước dài 128, rộng là 128 , ba giá trị màu là RGB sẽ có tới 128x128x3 = 49125 tham số cho mỗi lớp mạng để xử lý bức ảnh này. Hơn nữa các mạng nơ-ron phức tạp còn mắc phải vấn đề overfitting. Để giải quyết vấn đề này mạng nơ-ron tích chập (Convolutional Neural Networks hay ngắn gọn là CNN) là một dạng cải tiến của mạng nơ-ron nhân tạo được sử dụng. Ta sẽ đi vào phân tích một số đặc điểm của CNN để hiểu về rõ về cách giải quyết vấn đề của thiết kế mạng này.
 
 % Toàn bộ kiến trúc CNN được minh họa như Hình \ref{cnn}.
 
@@ -83,7 +86,7 @@ Các mạng nơ-ron truyền thống có thể giải những bài toán phức 
 % \end{figure}
 
 \subsection{Lớp tích chập}
-Trong xử lý ảnh và thị giác máy tính, người ta rõ hai khái niệm phép toán tích chập (convolution) và phép toán tương quan (correlation) qua điểm khác nhau duy nhất ở quá trình tính toán là đảo ngược ma trận lõi ở phép tích chập trước khi tính. Để dễ hình dung ta xem xét ví dụ sau đây với giá trị $I$ (độ dài $i$) và $K$ (đọ dài $k$):
+Trong xử lý ảnh và thị giác máy tính, người ta phân rõ hai khái niệm phép toán tích chập (convolution) và phép toán tương quan (correlation) qua điểm khác nhau duy nhất ở quá trình tính toán là đảo ngược ma trận lõi ở phép tích chập trước khi tính. Để dễ hình dung ta xem xét ví dụ sau đây với ma trận đầu vào 1-chiều $I$ (độ dài $i$) và lõi 1-chiều $K$ (độ dài $k$):
 $$ I = [1, 2, 3, 4, 5, 6, 7, 8, 9]$$
 $$ K = [2, 4, 6] $$
 Thì kết quả của phép tính tương quan được tính như sau:
@@ -94,36 +97,53 @@ Và kết quả của phép tính tích chập được tính như sau:
 $$ Convolution(I,K)_{c = \overline{0, i - k - 1}} = \sum_{m=c}^{c + k-1}I_{m}*K_{k - 1 - m + c}$$
 $$ Convolution(I,K) = [1*6 + 2*4 + 3*2, ... , 7*6 + 8*4 + 9*2] $$
 $$ Convolution(I,K) = [20, 32, 44, 56, 68, 80, 92] $$
-Công thức tương tự khi I, K là các ma trận 2, 3 chiều. Để dễ hình dung ta xem hình minh hoạ \ref{convExample}.
+Công thức trên tham khảo tại \cite{convSlide}. tương tự khi I, K là các ma trận 2, 3 chiều. Để dễ hình dung ta xem hình minh hoạ \ref{convExample}.
 
-\begin{figure}[ht]
+\begin{figure}[h]
 \centering
-        \includegraphics[totalheight=7cm]{Images/convExample.png}
+    \includegraphics[totalheight=2.7cm]{Images/conv.png}
     \caption{Phép tính tương quan trong xử lý ảnh}
     \label{convExample}
 \end{figure}
-Ta có thể thấy ở phép tính tương quan trên ma trận, tuỳ vào ma trận nhân $K$ mà ma trận kết quả sẽ có được một số tính chất đặt biệt, ví dụ ở hình \ref{convExample} ta sẽ nhận được ma trận kết quả làm nổi bật các cạnh dọc ở ma trận gốc. Điều tương tự cũng xảy ra với kết quả của phép tính tích chập vì hai phép tính này là gần giống nhau ở cách tính. Trong các phép tính xử lý ảnh, tuỳ vào tình huống mà người ta sử dụng phép tích chập hoặc phép tính tương quan để nhầm đạt được độ lợi về thời gian tính toán khi tính áp dụng các tính chất kết hợp lên một dãy các phép tính tích chập (tương quan) liên tục\cite{convtheorem}.\\
-Tuy nhiên ở các mạng học sâu, lớp tích chập và phép tính tích chập được dùng để chỉ phép tính tương quan. Các nên tảng học sâu được hỗ trợ như Tensorflow sử dụng từ khoá tích chập và lớp tích chập để chỉ phép tính tương quan trong xử lý ảnh. Vì như đã nói ý nghĩa của hai phép tính này là như nhau, tuỳ vào độ lợi tính toán mà người ta sẽ quyết định sử dụng phép tính nào.\\
+Ta có thể thấy ở phép tính tương quan trên ma trận, tuỳ vào ma trận lõi $K$ mà ma trận kết quả sẽ có được một số tính chất đặt biệt, ví dụ ở hình \ref{convExample} ta sẽ nhận được ma trận kết quả làm nổi bật các cạnh dọc ở ma trận đầu vào. Điều tương tự cũng xảy ra với kết quả của phép tính tích chập vì hai phép tính này là gần giống nhau ở cách tính. Trong các phép tính xử lý ảnh, tuỳ vào tình huống mà người ta sử dụng phép tích chập hoặc phép tính tương quan để nhầm đạt được độ lợi về thời gian tính toán khi tính áp dụng các tính chất kết hợp lên một dãy các phép tính tích chập (tương quan) liên tục\cite{convtheorem}.\\
+Tuy nhiên ở các mạng học sâu, phép tính tích chập được dùng để chỉ phép tính tương quan. Các nên tảng học sâu được hỗ trợ như Tensorflow sử dụng từ khoá tích chập và lớp tích chập để chỉ phép tính tương quan trong xử lý ảnh. Vì như đã nói ý nghĩa của hai phép tính này là như nhau, tuỳ vào độ lợi tính toán mà người ta sẽ quyết định sử dụng phép tính nào.\\
 Khi sử dụng lớp tích chập thay cho lớp kết nối đầy đủ ở mạng học sâu sẽ có một số khác biệt sau:
 \begin{itemize}
     \item Bộ nhớ tính toán sử dụng các lớp tích chập sẽ nhỏ hơn.
     \item Thời gian tính toán khi sử dụng các lớp tích chập sẽ nhanh hơn.
     \item Ở những lớp càng sâu, một điểm dữ liệu khi sử dụng các lớp tích chập sẽ bị ảnh hưởng bới nhiều điểm dữ liệu đầu vào hơn thay vì là như nhau ở tất cả các lớp.
-\end{itemize}
+\end{itemize} 
+Trong mạng học sâu, quá trình học sẽ giúp cập nhật các trọng số ở ma trận lõi $K$.
 
 \subsection{Lớp gộp}
 Lớp gộp (pooling), đôi khi được gọi là lớp giảm kích thước mẫu (sub-sampling), thường được sử dụng sau một số lớp tích chập nhất định. Ta có thể thấy sau khi qua một số lớp tích chập nhất định, ảnh thường sẽ có hiện tượng bị nhoè do những điểm ảnh gần nhau có giá trị gần giống nhau. Lớp gộp này đóng vai trò làm giảm kích thước ảnh nhưng vẫn đảm bảo giữ lại các dữ liệu cần thiết nhằm qua đó làm giảm số lượng phép tính toán và tránh tình trạng quá khớp (overfitting).\\
 Lớp gộp có thể sử dụng nhiều loại hàm gộp khác nhau như hàm trung bình hoặc hàm lấy lớn nhất (phổ biến) tuỳ thuộc vào đặc điểm của bài toán. Các lớp gộp này thường có kích thước bằng với độ cách (stride), tức là chúng sẽ có ý nghĩa như một phép thay thế một vùng các điểm dữ liệu chỉ bằng một điểm dữ liệu duy nhất, và các vùng này không có điểm trùng.\\
 Ta có thể thấy sau khi qua một lớp gộp, các vùng khác nhau sẽ nằm gần nhau hơn và nhờ vậy với lớp tính tích chập tiếp theo sẽ có được thông tin của một vùng lớn hơn ở ảnh ban đầu. Vì vậy sau khi qua càng nhiều lớp gộp, ảnh (đặc trưng) sẽ có ý nghĩa toàn cục hơn là ý nghĩa chi tiết. Đây cũng là một yếu điểm của lớp gộp cho bài toán phân đoạn ảnh mà không thay đổi kích thước của nó.
 
-\begin{figure}[ht]
+\begin{figure}[h]
 \centering
-        \includegraphics[totalheight=4cm]{Images/MaxpoolSample2.png}
+    \includegraphics[totalheight=3.5cm]{Images/max-pool.png}
     \caption{Phép tính gộp lấy lớn nhất với kích thước 2, độ cách 2}
     \label{poolExample}
 \end{figure}
 
 \subsection{Lớp đảo tích chập}
+Phép đảo tích chập, có tên gọi khác là phép chuyển vị (transpose), là phép tính ngược lại với phép tích chập. Ở phép đảo tích chập, mỗi giá trị trong ma trận ảnh gốc $S$ sẽ được nhân với một ma trận trọng số lõi $K$ để được một vùng giá trị của ảnh kết quả $R$, các vùng này có thể chồng lấn lên nhau tuỳ vào độ cách (stride) và kích thước của $K$. Trong xử lý ảnh, phép đảo tích chập thường được dùng để phóng to và làm rõ các loại ảnh như ảnh chụp kính hiển vi, ảnh nguyên tử, ảnh thiên văn...  Trong mạng học sâu, quá trình học sẽ giúp cập nhật các trọng số ở ma trận lõi $K$.
+
+\begin{figure}[h]
+\centering
+    \includegraphics[totalheight=3.2cm]{Images/deconv.png}
+    \caption{Phép tính đảo tích chập với kích thước 2, độ cách 1}
+    \label{deconvExample}
+\end{figure}
+
+\begin{figure}[h]
+\centering
+    \includegraphics[totalheight=3.2cm]{Images/realConvEx.png}
+    \caption{Ảnh chụp thiên văn trước và sau khi được xử lý đảo tích chập}
+    \label{deconvRealExample}
+\end{figure}
+
 
 \section{Các chỉ số đánh giá kết quả phân đoạn}
 Kết quả phân đoạn có thể được đánh giá bằng nhiều cách khác nhau. Đối với một bài toán nhất định, mỗi chỉ số đánh giá được lựa chọn cần phải nhạy cảm với một số đặc điểm phụ thuộc vào mục đích bài toán đó. Nếu bài toán để xác định thể tích vật thể, sai khác thể tích sẽ là chỉ số tiên quyết cho bài toán đó. Tuy nhiên với một kết quả phân đoạn cho ra thể tích chính xác hoàn toàn trên lý thuyết vẫn có thể bị sai hoàn toàn nếu như sử dụng chỉ số trùng giao trên hợp của voxel. Vì vậy, mỗi bài toán phải luôn dùng nhiều chỉ số phân đoạn khác nhau để đánh giá các giải pháp cho bài toán đó.\\
