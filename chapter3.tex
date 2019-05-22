@@ -101,8 +101,8 @@ Công thức trên tham khảo tại \cite{convSlide}. tương tự khi I, K là
 
 \begin{figure}[h]
 \centering
-    \includegraphics[totalheight=2.7cm]{Images/conv.png}
-    \caption{Phép tính tương quan trong xử lý ảnh}
+    \includegraphics[totalheight=3cm]{Images/conv.png}
+    \caption{Một phần quá trình tính tương quan trong xử lý ảnh}
     \label{convExample}
 \end{figure}
 Ta có thể thấy ở phép tính tương quan trên ma trận, tuỳ vào ma trận lõi $K$ mà ma trận kết quả sẽ có được một số tính chất đặt biệt, ví dụ ở hình \ref{convExample} ta sẽ nhận được ma trận kết quả làm nổi bật các cạnh dọc ở ma trận đầu vào. Điều tương tự cũng xảy ra với kết quả của phép tính tích chập vì hai phép tính này là gần giống nhau ở cách tính. Trong các phép tính xử lý ảnh, tuỳ vào tình huống mà người ta sử dụng phép tích chập hoặc phép tính tương quan để nhầm đạt được độ lợi về thời gian tính toán khi tính áp dụng các tính chất kết hợp lên một dãy các phép tính tích chập (tương quan) liên tục\cite{convtheorem}.\\
@@ -113,12 +113,13 @@ Khi sử dụng lớp tích chập thay cho lớp kết nối đầy đủ ở m
     \item Thời gian tính toán khi sử dụng các lớp tích chập sẽ nhanh hơn.
     \item Ở những lớp càng sâu, một điểm dữ liệu khi sử dụng các lớp tích chập sẽ bị ảnh hưởng bới nhiều điểm dữ liệu đầu vào hơn thay vì là như nhau ở tất cả các lớp.
 \end{itemize} 
-Trong mạng học sâu, quá trình học sẽ giúp cập nhật các trọng số ở ma trận lõi $K$.
+Trong mạng học sâu, quá trình học sẽ giúp cập nhật các trọng số của ma trận lõi $K$ ở lớp tích chập này.
 
 \subsection{Lớp gộp}
-Lớp gộp (pooling), đôi khi được gọi là lớp giảm kích thước mẫu (sub-sampling), thường được sử dụng sau một số lớp tích chập nhất định. Ta có thể thấy sau khi qua một số lớp tích chập nhất định, ảnh thường sẽ có hiện tượng bị nhoè do những điểm ảnh gần nhau có giá trị gần giống nhau. Lớp gộp này đóng vai trò làm giảm kích thước ảnh nhưng vẫn đảm bảo giữ lại các dữ liệu cần thiết nhằm qua đó làm giảm số lượng phép tính toán và tránh tình trạng quá khớp (overfitting).\\
+Lớp gộp (pooling), đôi khi được gọi là lớp giảm kích thước mẫu (sub-sampling), thường được sử dụng sau một số lớp tích chập nhất định. Vì người ta thấy rằng nếu dữ nguyên kích thước của ảnh sẽ tạo ra một số rất lớn trọng số làm cho mạng phải tính toán nhiều hơn và khó huấn luyện hơn do hiện tượng quá khớp (overfitting). Lớp gộp này đóng vai trò làm giảm kích thước ảnh nhưng vẫn đảm bảo giữ lại các dữ liệu cần thiết nhằm qua đó làm giảm số lượng phép tính toán và tránh tình trạng quá khớp vừa nêu.\\
 Lớp gộp có thể sử dụng nhiều loại hàm gộp khác nhau như hàm trung bình hoặc hàm lấy lớn nhất (phổ biến) tuỳ thuộc vào đặc điểm của bài toán. Các lớp gộp này thường có kích thước bằng với độ cách (stride), tức là chúng sẽ có ý nghĩa như một phép thay thế một vùng các điểm dữ liệu chỉ bằng một điểm dữ liệu duy nhất, và các vùng này không có điểm trùng.\\
-Ta có thể thấy sau khi qua một lớp gộp, các vùng khác nhau sẽ nằm gần nhau hơn và nhờ vậy với lớp tính tích chập tiếp theo sẽ có được thông tin của một vùng lớn hơn ở ảnh ban đầu. Vì vậy sau khi qua càng nhiều lớp gộp, ảnh (đặc trưng) sẽ có ý nghĩa toàn cục hơn là ý nghĩa chi tiết. Đây cũng là một yếu điểm của lớp gộp cho bài toán phân đoạn ảnh mà không thay đổi kích thước của nó.
+Ta có thể thấy sau khi qua một lớp gộp, các vùng khác nhau sẽ nằm gần nhau hơn và nhờ vậy với lớp tính tích chập tiếp theo sẽ có được thông tin của một vùng lớn hơn ở ảnh ban đầu. Vì vậy sau khi qua càng nhiều lớp gộp, ảnh (đặc trưng) sẽ có ý nghĩa toàn cục hơn là ý nghĩa chi tiết. Đây cũng là một yếu điểm của lớp gộp cho bài toán phân đoạn ảnh mà không thay đổi kích thước của nó.\\
+Trong quá trình học, lớp gộp không có các trọng số có thể học được.
 
 \begin{figure}[h]
 \centering
@@ -128,20 +129,45 @@ Ta có thể thấy sau khi qua một lớp gộp, các vùng khác nhau sẽ n�
 \end{figure}
 
 \subsection{Lớp đảo tích chập}
-Phép đảo tích chập, có tên gọi khác là phép chuyển vị (transpose), là phép tính ngược lại với phép tích chập. Ở phép đảo tích chập, mỗi giá trị trong ma trận ảnh gốc $S$ sẽ được nhân với một ma trận trọng số lõi $K$ để được một vùng giá trị của ảnh kết quả $R$, các vùng này có thể chồng lấn lên nhau tuỳ vào độ cách (stride) và kích thước của $K$. Trong xử lý ảnh, phép đảo tích chập thường được dùng để phóng to và làm rõ các loại ảnh như ảnh chụp kính hiển vi, ảnh nguyên tử, ảnh thiên văn...  Trong mạng học sâu, quá trình học sẽ giúp cập nhật các trọng số ở ma trận lõi $K$.
+Phép đảo tích chập, có tên gọi khác là phép chuyển vị (transpose), là phép tính ngược lại với phép tích chập. Ở phép đảo tích chập, mỗi giá trị trong ma trận ảnh gốc $S$ sẽ được nhân với một ma trận trọng số lõi $K$ để được một vùng giá trị của ảnh kết quả $R$, các vùng này có thể chồng lấn lên nhau tuỳ vào độ cách (stride) và kích thước của $K$. Trong xử lý ảnh, phép đảo tích chập thường được dùng để phóng to và làm rõ các loại ảnh như ảnh chụp kính hiển vi, ảnh nguyên tử, ảnh thiên văn...\\
+Trong mạng học sâu, quá trình học sẽ giúp cập nhật các trọng số của ma trận lõi $K$ ở lớp đảo tích chập này.
 
 \begin{figure}[h]
 \centering
-    \includegraphics[totalheight=3.2cm]{Images/deconv.png}
-    \caption{Phép tính đảo tích chập với kích thước 2, độ cách 1}
+    \includegraphics[totalheight=3.5cm]{Images/deconv.png}
+    \caption{Một phần quá trình tính đảo tích chập với kích thước 2, độ cách 1}
     \label{deconvExample}
 \end{figure}
 
 \begin{figure}[h]
 \centering
-    \includegraphics[totalheight=3.2cm]{Images/realConvEx.png}
+    \includegraphics[totalheight=3.5cm]{Images/realConvEx.png}
     \caption{Ảnh chụp thiên văn trước và sau khi được xử lý đảo tích chập}
     \label{deconvRealExample}
+\end{figure}
+
+\subsection{Lớp đảo gộp}
+Để tạo ra một bức ảnh có kích thước lớn hơn ảnh gốc, người ta có nhiều phương pháp khác nhau. Ví dụ có thể sử dụng các phương pháp như: dùng phép toán đảo tích chập với độ cách lớn hơn 1, dùng phép biến đổi tuyến tính để tạo ra giá trị của điểm ảnh ở giữa hai điểm ảnh kể nhau, lặp lại điểm ảnh tạo ra các điểm lân cận. Trong \cite{unpoolref}, các tác giả giới thiệu phép đảo gộp với bảng nhớ được thực hiện như sau: khi thực hiện phép gộp giữ lại vị trí của các giá trị được lấy, khi thực hiện phép đảo gộp hằng số dùng bảng vị trí đã nhớ để tái tạo lại vị trí có giá trị khác hằng số đã chọn.\\
+Trong quá trình học, lớp đảo gộp không có các trọng số có thể học được.
+
+\begin{figure}[h]
+\centering
+    \includegraphics[totalheight=7.5cm]{Images/unpool.png}
+    \caption{Minh hoạ phép đảo gộp với bảng nhớ}
+    \label{unpoolExample}
+\end{figure}
+
+\subsection{Ứng dụng vào bài toán phân đoạn ảnh}
+Như đã để cập, các mô hình mạng nơ-ron học sâu khi sử dụng cho xử lý ảnh sẽ gặp vấn đề quá tải số trọng số. Vì vậy các mạng học sâu sẽ sử dụng các lớp tích chập để giải quyết vấn đề này.\\
+Tuy nhiên nếu chỉ sử dụng nhiều lớp tích chập liên tiếp nhau, vẫn có thể gây ra quá tải về trọng số nếu độ sâu của mạng đủ lớn. Nếu như giảm độ sâu của mạng thì các đặc điểm mang tính phổ quát của ảnh sẽ không được học. Vì vậy lớp gộp được sử dụng sau một số lớp tích chập nhất định để nhằm giảm đi số trọng số của mạng mà vẫn đảm bảo được chiều sâu cần có để mạng có thể học được các thông tin phổ quát.\\
+Khi đặt vào bài toán phân đoạn ảnh, rõ ràng sau khi đi qua một số các lớp gộp, kích thước ảnh đã được thay đổi và nhỏ hơn kích thước ban đầu. Để tái tạo lại kích thước này người ta thường sử dụng các lớp mạng làm tăng kích thước như đảo tích chập với độ cách lớn hơn một hoặc sử dụng lớp đảo gộp kết hợp với lớp tích chập hoặc kết hợp lớp đảo gộp với lớp đảo tích chập...\\
+Ví dụ mạng Unet sử dụng phép lặp lại điểm ảnh, phép tích chập và phép cộng theo số kênh trong quá trình tái tạo lại kích thước ban đầu của ảnh.
+
+\begin{figure}[h]
+\centering
+    \includegraphics[totalheight=9.5cm]{Images/unet.png}
+    \caption{Kiến trúc mạng Unet}
+    \label{unetPic}
 \end{figure}
 
 
