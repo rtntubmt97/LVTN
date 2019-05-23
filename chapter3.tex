@@ -74,7 +74,7 @@ Còn hàm lỗi thì chúng ta tự xây dựng và tự tối ưu miễn sao gi
 \end{itemize}
 
 \section{Mạng nơ-ron học sâu tích chập và ứng dụng cho phân đoạn ảnh}
-Các mạng nơ-ron truyền thống có thể giải những bài toán phức tạp với độ chính xác khá cao nhưng vấn đề chi phí đôi khi lại làm cho nó trở nên không khả thi. Đặc biệt sử dụng nó trong lĩnh vực xử lý ảnh. Ta lấy ví dụ một ảnh đầu vào có kích thước dài 128, rộng là 128 , ba giá trị màu là RGB sẽ có tới 128x128x3 = 49125 tham số cho mỗi lớp mạng để xử lý bức ảnh này. Hơn nữa các mạng nơ-ron phức tạp còn mắc phải vấn đề overfitting. Để giải quyết vấn đề này mạng nơ-ron tích chập (Convolutional Neural Networks hay ngắn gọn là CNN) là một dạng cải tiến của mạng nơ-ron nhân tạo được sử dụng. Ta sẽ đi vào phân tích một số đặc điểm của CNN để hiểu về rõ về cách giải quyết vấn đề của thiết kế mạng này.
+Các mạng nơ-ron truyền thống có thể giải những bài toán phức tạp với độ chính xác khá cao nhưng vấn đề chi phí đôi khi lại làm cho nó trở nên không khả thi. Đặc biệt sử dụng nó trong lĩnh vực xử lý ảnh. Ta lấy ví dụ một ảnh đầu vào có kích thước dài 128, rộng là 128 , ba giá trị màu là RGB sẽ có tới 128x128x3 = 49125 tham số cho mỗi lớp mạng để xử lý bức ảnh này. Hơn nữa các mạng nơ-ron phức tạp còn mắc phải vấn đề quá khớp (overfitting). Để giải quyết vấn đề này mạng nơ-ron tích chập (Convolutional Neural Networks hay ngắn gọn là CNN) là một dạng cải tiến của mạng nơ-ron nhân tạo được sử dụng. Ta sẽ đi vào phân tích một số đặc điểm của CNN để hiểu về rõ về cách giải quyết vấn đề của thiết kế mạng này.
 
 % Toàn bộ kiến trúc CNN được minh họa như Hình \ref{cnn}.
 
@@ -163,12 +163,91 @@ Tuy nhiên nếu chỉ sử dụng nhiều lớp tích chập liên tiếp nhau,
 Khi đặt vào bài toán phân đoạn ảnh, rõ ràng sau khi đi qua một số các lớp gộp, kích thước ảnh đã được thay đổi và nhỏ hơn kích thước ban đầu. Để tái tạo lại kích thước này người ta thường sử dụng các lớp mạng làm tăng kích thước như đảo tích chập với độ cách lớn hơn một hoặc sử dụng lớp đảo gộp kết hợp với lớp tích chập hoặc kết hợp lớp đảo gộp với lớp đảo tích chập...\\
 Ví dụ mạng Unet sử dụng phép lặp lại điểm ảnh, phép tích chập và phép cộng theo số kênh trong quá trình tái tạo lại kích thước ban đầu của ảnh.
 
-\begin{figure}[h]
-\centering
-    \includegraphics[totalheight=9.5cm]{Images/unet.png}
-    \caption{Kiến trúc mạng Unet}
-    \label{unetPic}
-\end{figure}
+% \begin{figure}[h]
+% \centering
+%     \includegraphics[totalheight=9.5cm]{Images/unet.png}
+%     \caption{Kiến trúc mạng Unet}
+%     \label{unetPic}
+% \end{figure}
+
+\section{Kỹ thuật lan toả bất đẳng hướng}
+(Tên gọi trong tiếng Anh của kỹ thuật này là Anisotropic diffusion.)
+Như đã nói nếu ta sử dụng phép toán tích chập của một ảnh với một ma trận phù hợp sẽ được một ảnh gồm các cạnh của ảnh gốc. Ta xem xét ứng dụng chúng vào ảnh \ref{fig:ww2} chụp một sân bay để nhận diện cạnh chính. Ảnh này đủ rõ để một người bình thường có thể nhận diện ra các đường băng của sân bay, các cạnh khối của toà nhà. Khi chú ý kỹ ta có thể thấy các chi tiết bề mặt như đường băng, toà nhà không mượt và có các đường nét nhỏ nằm ở trên đó. Vì vậy khi sử dụng một ma trận lõi nhận diện cạnh trực tiếp như ma trận sobel ta sẽ được một kết quả gồm nhiều cạnh nhiễu (không mong muốn) kèm với những cạnh thực như hình \ref{fig:ww2_sobel}; \\
+
+\begin{figure*}
+  \centering
+  \subfigure[Ảnh gốc]{%
+    \includegraphics[width=0.75\textwidth]{Images/ww2.jpg}%
+    \label{fig:ww2}%
+    }
+    \subfigure[Kết quả tích chập với ma trận nhận diện cạnh]{%
+    \includegraphics[width=0.75\textwidth]{Images/ww2_sobel.jpg}%
+    \label{fig:ww2_sobel}%
+    }
+  \caption{Minh hoạ sử dụng phép tích chập lấy cạnh trực tiếp}
+  \label{fig:simplesobel}
+\end{figure*}
+
+Ví dụ một ma trận sobel có thể sử dụng:
+$$\begin{bmatrix}
+-1 & 0 & 1\\ 
+-2 & 0 & 2\\ 
+-1 & 0 & 1
+\end{bmatrix}$$
+
+Để loại bỏ các cạnh không mong muốn trên, người ta sử dụng một phép tích chập khác trước khi sử dụng phép tích chập với sobel. Phép tích chập trung gian này thường được dùng với một ma trận lọc Gauss. \\
+Ví dụ một ma trận Gauss có thể sử dụng:
+$$\begin{bmatrix}
+1 & 2 & 1\\ 
+2 & 4 & 2\\ 
+1 & 2 & 1
+\end{bmatrix}$$
+Sử dụng một ma trận Gauss như trên là một phép biến đổi đẳng hướng và tương tự với sử dụng một phép cập nhật khử nhiểu thoả: $\partial I(x,y,t)/\partial t = div(\nabla I)$ với $x, y$ là toạ độ của điểm ảnh, $t$ là thời gian biến đổi, $\nabla I$ là gradient của ảnh $I$.\\
+
+\begin{figure*}
+  \centering
+  \subfigure[Ảnh sau khi khử nhiễu]{%
+    \includegraphics[width=0.75\textwidth]{Images/ww2_gauss.jpg}%
+    \label{fig:ww2}%
+    }
+    \subfigure[Kết quả tích chập ảnh đã khử nhiễu đẳng hướng với ma trận nhận diện cạnh]{%
+    \includegraphics[width=0.75\textwidth]{Images/ww2_gauss_sobel.jpg}%
+    \label{fig:ww2_sobel}%
+    }
+  \caption{Minh hoạ sử dụng phép tích chập lấy cạnh đã qua bước trung gian khử nhiễu Gauss}
+  \label{fig:gausssobel}
+\end{figure*}
+
+Mặc dù đã loại bỏ được rất nhiều cạnh không cần thiết nhưng các cạnh bây giờ lại có hiện tượng bị nhoè và không còn chính xác vị trí cạnh nữa. Để giải quyết vấn đề này, Perona và Malik trong \cite{56205} đã đề xuất một cách cập nhật mới thoả: $\partial I(x,y,t)/\partial t = div(g(||\nabla||) \nabla I)$ với $g(||\nabla||)$ có khả năng tìm được vị trí các cạnh chính. Biến đổi công thức do Perna và Malik đề xuất trên về dạng rời rạc khi xử lý các điểm ảnh ta được công thức cập nhật:
+$$I^{t+1}_{s} = I^{t}_{s} + \frac{\lambda }{\eta_{s}}\sum_{p \in \eta_{s}}g(\nabla I_{s,p})\nabla I_{s,p}.$$
+Với một số kí hiệu mới $I^{t}_{s}$ là một điểm ảnh có toạ độ $s$ sau lần cập nhật $t$, $\eta_{s}$ là tập các điểm ảnh lân cận của điểm có toạ độ $s$, $\nabla I_{s,p}$ là gradient của điểm ảnh $I_{s,p}$, $\lambda$ là một hệ số cập nhật. Trong đó:
+$$\nabla I_{p,s} = I_{p} - I_{s}^{t},$$
+$g(x)$ có nhiều sự lựa chọn, ví dụ:
+$$g(x) = \frac{1}{1 + {x^{2}/k}}.$$
+Ta có thể thấy ở công thức mới này vai trò của các điểm ảnh lân cận khi cập nhật một điểm ảnh mới không còn chỉ phụ thuộc vào vị trí tương đối của nó với điểm cập nhật nữa. Vai trò của mỗi điểm lân cận này giờ còn phải phụ thuộc vào vị trí và giá trị của điểm ảnh được cập nhật.
+
+% \begin{figure}
+% \centering
+%     \includegraphics[totalheight=6cm]{Images/iso_aniso.png}
+%     \caption{Minh hoạ cho phép biến đổi đẳng hướng và bất đẳng hướng}
+%     \label{iso_aniso}
+% \end{figure}
+
+\begin{figure*}
+  \centering
+  \subfigure[Kết quả tích chập ảnh đã khử nhiễu đẳng hướng với ma trận nhận diện cạnh]{%
+    \includegraphics[width=0.75\textwidth]{Images/ww2_gauss_sobel.jpg}%
+    \label{fig:ww2}%
+    }
+    \subfigure[Kết quả tích chập ảnh đã khử nhiễu bất đẳng hướng với ma trận nhận diện cạnh]{%
+    \includegraphics[width=0.75\textwidth]{Images/ww2_aniso_sobel.jpg}%
+    \label{fig:ww2_sobel}%
+    }
+  \caption{So sánh sử dụng khử nhiểu trung gian đẳng hướng và bất đẳng hướng trước khi nhận diện cạnh}
+  \label{fig:iso_aniso}
+\end{figure*}
+
+Nội dung và công thức trong mục này tham khảo tại \cite{661192} và \cite{56205}.
 
 
 \section{Các chỉ số đánh giá kết quả phân đoạn}
@@ -239,3 +318,7 @@ Lưu ý các chỉ số trên là các chỉ số lỗi, càng thấp tức là 
     \item $d(S(G),S(R))$: khoảng cách một chiều từ bề mặt vật thể G tới bề mặt vật thể R, đây là tập hợp $\{ d(v_{0}, S(R)), d(v_{1}, S(R)),...d(v_{n}, S(R)) \} $ với $v \in S(G) $
     \item $\textbf{|VD|}$: giá trị tuyệt đối của chỉ số VD.
 \end{itemize}
+
+\section{Công nghệ sử dụng}
+\subsection{Nền tảng Tensorflow}
+\subsection{Nền tảng Keras}
