@@ -9,29 +9,29 @@ Các giải thuật đánh nhãn vùng liên thông coi ảnh đầu vào là m�
   \caption{Giải thuật một thành phần trong mỗi thời điểm}\label{OCAAT}
   \begin{algorithmic}[1]
     \Procedure{OCAAT}{Array $A[m,n]$}
-    \State Array B[m, n] = 0 \Comment{Khởi tạo ma trận trả về, 0: chưa duyệt}
-    \State Queue q \Comment{Khởi tạo queue q rỗng}
-    \State Integer $current\_label = 1$
+    \State Array $B[m, n]$ = $0$ \Comment{Khởi tạo ma trận trả về, 0: chưa duyệt}
+    \State Queue $q$ \Comment{Khởi tạo queue q rỗng}
+    \State Integer $current\_label$ = $1$
     
     \For{$i = 0$ to $m$ }
         \For{$j = 0$ to $n$}
-            \If{$A[i,j] == 1$ and $B[i,j] == 0$} \Comment{điểm (i,j) không phải nền và chưa duyệt}
-                \State $B[i,j] = current\_label$ \Comment{đánh nhãn toạ độ (i,j)}
-                \State q.push([i,j])
+            \If{$A[i,j]$ == $1$ and $B[i,j]$ == $0$} \Comment{điểm (i,j) không phải nền và chưa duyệt}
+                \State $B[i,j]$ = $current\_label$ \Comment{đánh nhãn điểm(i,j)}
+                \State $q.push([i,j])$
             \Else
                 \State continue
             \EndIf
-            \While {q is not empty}
-                \State $pixel = q.pop()$
-                \State $neighbors = get\_neighbors(pixel)$
+            \While {$q$ is not empty}
+                \State $pixel$ = $q.pop()$
+                \State $neighbors$ = $get\_neighbors(pixel)$
                 \For {each $neighbor$ in $neighbors$}
-                    \If{$A[neighbor] == 1$ and $B[neighbor] == 0$}
-                        \State $B[i,j] = current\_label$
-                        \State q.push(neighbor)
+                    \If{$A[neighbor]$ == $1$ and $B[neighbor]$ == $0$}
+                        \State $B[i,j]$ = $current\_label$
+                        \State $q.push(neighbor)$
                     \EndIf
                 \EndFor
             \EndWhile
-            \State $current\_label += 1$
+            \State $current\_label$ += $1$
         \EndFor   
     \EndFor
     \Return $B, current\_label$
@@ -46,23 +46,23 @@ Một giải thuật khác để đánh nhãn cho các vùng được trình bà
   \caption{Giải thuật hai vòng}\label{twopass}
   \begin{algorithmic}[1]
     \Procedure{TwoPass}{Array $A[m,n]$}
-    \State $Array B[m, n] = 0$ \Comment{Khởi tạo ma trận trả về, 0: chưa duyệt}
-    \State $Dict dict = \{\}$
-    \State $next\_label = 1$
+    \State Array $B[m, n] = 0$ \Comment{Khởi tạo ma trận trả về, 0: chưa duyệt}
+    \State Dict $dict = \{\}$
+    \State Integer $next\_label = 1$
     
     \For{$i = 0$ to $m$ }
         \For{$j = 0$ to $n$}
             \If{$A[i,j] != 0$}
-                \State $neighbors = get_neighbors_foreground(A[i,j])$
+                \State $neighbors$ = $get\_neighbors\_foreground(A[i,j])$
                 \If{$neighbors$ is empty}
-                    \State $dict[next\_label] = set()$
-                    \State $B[i,j] = next\_label$
-                    \State $next\_label += 1$
+                    \State $dict[next\_label]$ = $set()$
+                    \State $B[i,j]$ = $next\_label$
+                    \State $next\_label$ += $1$
                 \Else
-                    \State $L = getLabels(neigbors)$
-                    \State $B[i,j] = min(L)$
+                    \State $L$ = $getLabels(neigbors)$
+                    \State $B[i,j]$ = $min(L)$
                     \For {each $label$ in $L$}
-                        \State $dict[label] += union(dict[label], L)$
+                        \State $dict[label]$ += $union(dict[label], L)$
                     \EndFor
                 \EndIf
             \EndIf
@@ -70,38 +70,87 @@ Một giải thuật khác để đánh nhãn cho các vùng được trình bà
     \EndFor
     \For{$i = 0$ to $m$ }
         \For{$j = 0$ to $n$}
-            \If{$A[i,j] != 0$}
-                \State $B[i,j] = find(labels[i,j]$
+            \If{$A[i,j]$ != $0$}
+                \State $B[i,j]$ = $find(labels[i,j]$
             \EndIf
         \EndFor   
     \EndFor
-    \Return $B, next\_label$
+    \State \Return $B, next\_label$
     \EndProcedure
   \end{algorithmic}
 \end{algorithm}
 \section{Loại bỏ khối}
 Với bài toán phân đoạn lá gan, để kết quả có thể sử dụng các thao tác hậu xử lý thì kết quả đó phải đạt tới một mức độ chính xác nhất định. Khi đó trên dữ liệu 3-chiều sẽ có một thành phần liên thông lớn nhất chính là lá gan, còn những thành phần liên thông khác thông thường sẽ không trùng với lá gan vì vậy sẽ bị loại bỏ. Qua thực nghiệm, thao tác loại bỏ các thành phần liên thông khác lớn nhất cho kết quả có độ chính xác cao hơn.\\
 \begin{algorithm}
-  \caption{Giải thuật loại bỏ các thành phần liên thông nhiễu}\label{remove_components}
+  \caption{Giải thuật của chúng tôi loại bỏ các thành phần nhiễu}\label{remove_components}
   \begin{algorithmic}[1]
     \Procedure{remove\_components}{Array $A[m,n]$}
-    \State $Array B[m,n] = 0$
-    \State $Integer numComponents = 0$
-    \State $B, numComponents = labels(A)$ \Comment{Sử dụng hàm đánh nhãn ở mục trước}
-    \State $List<Integer> counts$
+    \State Array $B[m,n]$ = $0$
+    \State Integer $numComponents$ = $0$
+    \State $B, numComponents$ = $labels(A)$ \Comment{Sử dụng hàm đánh nhãn ở mục trước}
+    \State List<Integer> $counts$
     \For{$i = 0$ to $numComponents -1$}
-        \State $counts[i] = count_pixel_equal(B, i)$
+        \State $counts[i]$ = $count_pixel_equal(B, i)$
     \EndFor
-    \State $Integer choose = max(counts)$
+    \State Integer $choose$ = $max(counts)$
     \For{each $P$ in $B$}
-        \If{$P != choose$}
-            \State $P = 0$ \Comment{Cho điểm P là nền}
+        \If{$P$ != $choose$}
+            \State $P$ = $0$ \Comment{Gán điểm P là nền}
         \Else
-            \State $P = 1$
+            \State $P$ = $1$
         \EndIf
     \EndFor
-    \Return $B$
+    
+    \State \Return $B$
     \EndProcedure
   \end{algorithmic}
 \end{algorithm}
+
+
+
+\begin{figure*}[h]
+  \centering
+  \subfigure[Một lát cắt dự đoán trước khi hậu xử lý]{%
+    \includegraphics[width=0.45\textwidth]{Images/no_fill_result.png}%
+    \label{fig:no_post_pro}%
+    }
+    \subfigure[Một lát cắt dự đoán sau khi hậu xử lý]{%
+    \includegraphics[width=0.45\textwidth]{Images/filled_result.png}%
+    \label{fig:post_pro}%
+    }
+  \caption{Thay đổi của một dự đoán trước và sau hậu xử lý}
+  \label{fig:ab}
+\end{figure*}
+
 \section{Lấp đầy khối}
+Sau khi có được kết quả dự đoán, bên cạnh loại bỏ các khối dự đoán nhiễu, chúng tôi thực hiện thao tác lấp đầy khối dự đoán chính là lá gan. Qua thực nghiệm, kết quả dự đoán sau khi được xử lý bằng cách này cho độ chính xác cao hơn và hình ảnh hiển thị rõ ràng hơn. Hiện tại đã có nhiều thư viện của python hỗ trợ thao tác này ví dụ như \textbf{scipy} với hàm \textbf{ndimage.binary\_fill\_holes}. Tuy nhiên, chúng tôi vẫn có một được một giải thuật xử lý thao tác này bằng cách sửa đổi giải thuật \ref{OCAAT}.
+
+\begin{algorithm}
+  \caption{Giải thuật của chúng tôi để lấp đầy khối}\label{OCAAT2}
+  \begin{algorithmic}[1]
+    \Procedure{fill\_hole}{Array $A[m,n]$}
+    \State Array $B[m, n]$ = $1$ \Comment{Khởi tạo ma trận trả về, 1: chưa duyệt}
+    \State Queue $q$ \Comment{Khởi tạo queue q rỗng}
+    
+    \For{$(i,j)$ is the address of pixels on the border} \Comment{Lấy những điểm trên biên}
+        \If{$A[i,j]$ == $0$ and $B[i,j]$ == $1$} \Comment{điểm (i,j) là nền và chưa duyệt}
+            \State $B[i,j]$ = $0$ \Comment{ghi nhận điểm nền}
+            \State $q.push([i,j])$
+        \Else
+            \State continue
+        \EndIf
+        \While {$q$ is not empty}
+            \State $pixel$ = $q.pop()$
+            \State $neighbors$ = $get\_neighbors(pixel)$
+            \For {each $neighbor$ in $neighbors$}
+                \If{$A[neighbor]$ == $0$ and $B[neighbor]$ == $1$}
+                    \State $B[i,j]$ = $0$
+                    \State $q.push(neighbor)$
+                \EndIf
+            \EndFor
+        \EndWhile
+    \EndFor
+    \State \Return $B, current\_label$
+    \EndProcedure
+  \end{algorithmic}
+\end{algorithm}

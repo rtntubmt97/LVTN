@@ -326,5 +326,12 @@ Trong cuộc thi LiTS các chỉ số không được quy ra điểm, thứ hạ
     \item $\textbf{|VD|}$: giá trị tuyệt đối của chỉ số VD.
 \end{itemize}
 
-\section{Công nghệ sử dụng}
-\subsection{Nền tảng Tensorflow}
+\section{Giải thuật dựng hình khối}
+Để có thể hiển thị vật thể lên mô hình 3-chiều, chúng ta cần một lưới đa giác biểu thị vật thể đó gồm tập đỉnh, tập cạnh, tập mặt. Giải thuật dựng hình khối (Marching Cubes) được dùng để xây dựng lưới đa giác từ một ảnh 3-chiều gồm các điểm ảnh 3-chiều (voxel). Giải thuật này xây dựng lên các khối hộp vuông 3-chiều có đỉnh là các điểm ảnh, sau đó tuỳ thuộc vào vị trí của các điểm ảnh (bây giờ là đỉnh của khối hộp) nằm trong hay ngoài vật thể, mà các mặt của vật thể sẽ được định nghĩa. Vì mỗi khối vuông có 8 đỉnh, nên sẽ có tổng cộng 256 trường hợp bố trí đỉnh trong và ngoài vật thể. Tuy nhiên các vị trí này có thể trùng nhau khi ta xoay hoặc lấy đối xứng. Để tăng tốc độ tạo ra bề mặt vật thể, người ta đề xuất ra 15 khối hộp có thể đại diện cho tất cả trường hợp và xây dựng giải thuật lưới đa giác phù hợp với 15 khối hộp đó. Về sau, giải thuật này bộc lộ nhiều điểm yếu và được Chernyaev thay thế bằng giải thuật khác với 33 khối hộp biểu diễn cho tất cả trường hợp \cite{marching_cube}.
+
+\begin{figure}[h]
+\centering
+    \includegraphics[totalheight=4cm]{Images/marching_15.png}
+    \caption{15 trường hợp cơ bản để tạo lưới đa giác được đề xuất.}
+    \label{marching_15}
+\end{figure}

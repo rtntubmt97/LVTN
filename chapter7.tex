@@ -1,6 +1,43 @@
-\chapter{Giải pháp đề xuất}
-Chúng tôi đã tiến hành xây dựng và thử nghiệm phương pháp phân đoạn lá gan trên các mô hình học sâu khác nhau.
-\section{Mô hình 2D}
+\chapter{Thử nghiệm mô hình}
+Chúng tôi đã tiến hành xây dựng và thử nghiệm phương pháp phân đoạn lá gan trên các mô hình học sâu khác nhau. Mỗi mô hình đều được chúng tôi kiểm tra trên ít nhất một hệ thống chấm điểm công khai trung lập.
+\section{Mô hình đảo tích chập 2-chiều}
+\subsection{Chuẩn bị dữ liệu huấn luyện}
+Khi huấn luyện mô hình này chúng tôi thực hiện phương án làm giàu dữ liệu trực tuyến, tức là các hình ảnh sẽ được làm giàu trong lúc huấn luyện. Với sự hỗ trợ của các nền tảng học máy, phương án làm giàu dữ liệu này sẽ tiết kiệm được không gian đĩa giành cho lưu dữ liệu. Bên cạnh đó, vì việc huấn luyện mạng sử dụng GPU, nên các nền tảng đã thiết kế để có thể chuẩn bị dữ liệu bằng CPU và RAM tránh tình trạng dùng chung tài nguyên gây tranh chấp và thời gian huấn luyện bị kéo dài.\\
+Chúng tôi thực hiện các phép làm giàu dữ liệu cơ bản gồm:
+\begin{itemize}
+    \item Thực hiện phép quay từ -5 đến 5 độ quan tâm ảnh.
+    \item Thực hiện phép phóng to từ 0.5 (làm nhỏ đi hai lần) đến 1.5. Phép phóng to này không bắt buộc hai chiều toạ độ cùng một độ phóng.
+\end{itemize}
+Chúng tôi huấn luyện mô hình này bằng tập dữ liệu SLiver07 gồm 20 ảnh CT 3-chiều được chia ra theo tỉ lệ 19:1 cho huấn luyện và đánh giá. Mô hình được kiểm tra trên 10 ảnh 3-chiều tại \cite{website:slvier07}.
+\subsection{Xây dựng mô hình mạng}
+Chúng tôi sử dụng mô hình mạng như \cite{unpoolref}. Vì mô hình này ban đầu sử dụng cho ảnh 2 chiều kích thước 224x224 với tập dữ liệu VOC2012 nên để phù hợp với bài toán, chúng tôi đã thử thay đổi các thông số của mạng khác nhau như số khối, số lớp tích chập - đảo tích chập, số lõi cũng như kích thước lõi mối lớp tích chập, ... Kết quả được mô hình tốt nhất là mô hình chỉ thay đổi kích thước ảnh đầu vào và không dùng các trọng số đã huấn luyện (pretrain).
+\paragraph{Thông số huấn luyện mô hình}
+\begin{itemize}
+\item Máy tính sử dụng: Máy ảo Google Colab với card đồ họa GPU Tesla T4.
+\item Framework: Tensorflow 1.13.1.
+\item Ngôn ngữ: Python 3.6.4.
+\item Hàm mất mát (Loss function): Cross entropy loss.
+\item Phương pháp tối ưu: Adam optimizer.
+\item Các siêu tham số: Learning rate 0.0005.
+\end{itemize}
+\paragraph{Kết quả}
+Với mô hình này chúng tôi kiểm tra kết quả trên hệ thống chấm điểm của SLiver07 được kết quả như bảng sau:
+\begin{table}[h]
+\begin{center}
+\begin{tabular}{|@{\hspace{1cm}}c@{\hspace{1cm}}|@{\hspace{1cm}}c@{\hspace{1cm}}|@{\hspace{1cm}}c@{\hspace{1cm}}|}
+\hline
+\textbf{Độ Đo}     & \textbf{Giá trị}      & \textbf{Điểm} \\ \hline
+VOE            & 6.63                      & 74.11         \\ \hline
+RVD            & -0.31                     & 83.81         \\ \hline
+AvgD           & 1.15                      & 71.21         \\ \hline
+RMSD           & 2.64                      & 65.12         \\ \hline
+MaxD           & 26.49                     & 63.33         \\ \hline
+Average Score  & --                        & 71.51         \\ \hline
+\end{tabular}
+\caption{\label{tab:deconv_SLIVER07}Kết quả đánh giá mô hình đảo tích chập trên SLIVER07}
+\end{center}
+\end{table}
+
 \section{Mô hình mạng nơ-ron tích chập 3D (CNN)}
 \subsection{Chuẩn bị dữ liệu huấn luyện}
 Phương pháp làm giàu giữ liệu:
@@ -17,7 +54,8 @@ Dữ liệu từ các tập SLiver07 \cite{website:slvier07}, 3Dircadb \cite{web
 \item Phần đánh giá (Validation data): Đây là phần dùng để kiểm tra nếu mô hình quá khớp (Overfitting). Dữ liệu đánh giá bao gồm 1080 mẫu dữ liệu với kích thước 192x192x64.
 \end{itemize}
 \subsection{Xây dựng mô hình mạng nơ-ron tích chập 3 chiều}
-Dựa trên kiến trúc mạng nơ-ron tích chập 3 chiều và phương pháp huấn luyện giám sát sâu\cite{dsn_paper} của Qi Dou và cộng sự, chúng tôi đã xây dựng mô hình phù hợp và có thể huấn luyện trên máy ảo google colab (Hình \ref{our_CNN_org}). Mô hình này gồm hai phần: phần mã hóa và phần giải mã. Trong phần mã hóa, chúng tôi đã sử dụng bốn lớp Max pooling với stride 2x2x2 và các lớp tích chập với activation ELU. Sau phần mã hóa, kích thước bản đồ đặc trưng đã giảm kích thước đầu vào 192x192x64x1 còn 12x12x4x256. Phần giải mã chỉ sử dụng bốn lớp đảo tích chập với stride 2x2x2 và một lớp sigmoid. Đầu ra của lớp Sigmoid là một bản đồ xác xuất có kích thước 192x192x64x1. Mỗi giá trị trong bản đồ xác xuất này là xác xuất mà voxel tương ứng ở đầu vào là gan.
+Dựa trên kiến trúc mạng nơ-ron tích chập 3 chiều và phương pháp huấn luyện giám sát sâu\cite{dsn_paper} của Qi Dou và cộng sự, chúng tôi đã xây dựng mô hình phù hợp và có thể huấn luyện trên máy ảo google colab (Hình \ref{our_CNN_org}). Mô hình này gồm hai phần: phần mã hóa và phần giải mã. Trong phần mã hóa, chúng tôi đã sử dụng bốn lớp Max pooling với stride 2x2x2 và các lớp tích chập với activation ELU. Sau phần mã hóa, kích thước bản đồ đặc trưng đã giảm kích thước đầu vào 192x192x64x1 còn 12x12x4x256. Phần giải mã chỉ sử dụng bốn lớp đảo tích chập với stride 2x2x2 và một lớp sigmoid. Đầu ra của lớp Sigmoid là một bản đồ xác xuất có kích thước 192x192x64x1. Mỗi giá trị trong bản đồ xác xuất này là xác xuất mà voxel tương ứng ở đầu vào là gan.\\
+
 
 \begin{figure}[h]
 \centering
@@ -45,8 +83,8 @@ Mạng nơ-ron tích chập 3D được biến đổi và huấn luyện theo ph
 \item Các siêu tham số: Learning rate 0.0001, L2 regularization 0.0001.
 \item Các tham số tổng hợp hàm mất mát: $\mu_1 = 1$,  $\mu_2 = 2$,  $\mu_3 = 4$,  $\mu_4 = 8$
 \end{itemize}
-\paragraph{Kết quả}
-Mô hình CNN được đánh giá trên các hệ thống đánh giá kết quả tự động mang tính khách quan cao trên tập kiểm thử SLIVER07 và LITS2017 (Bảng \ref{tab:CNN-SLIVER07_Test}). Ngoài ra chúng tôi đã tự đánh giá mô hình này trên tập dữ liệu 3Dircadb batch 1. Phương pháp này đã đạt kết quả khá tốt trên tập SLIVER07 và 3Dircadb với độ đo VOE thấp hơn 6\%. Đây là một kết quả có thể chấp nhận được và sử dụng cho việc xây dựng mô hình lá gan. Tuy nhiên, khả năng hân đoạn của mô hình CNN còn khá hạn chế trên tập kiểm thử LiTS2017.
+\paragraph{Kết quả phân đoạn}
+Mô hình CNN được đánh giá trên các hệ thống đánh giá kết quả tự động mang tính khách quan cao trên tập kiểm thử SLIVER07 và LITS2017 (Bảng \ref{tab:CNN-SLIVER07_Test}). Ngoài ra chúng tôi đã tự đánh giá mô hình này trên tập dữ liệu 3Dircadb\_1. Phương pháp này đã đạt kết quả khá tốt trên tập SLIVER07 và 3Dircadb với độ đo VOE thấp hơn 6\%. Đây là một kết quả có thể chấp nhận được và sử dụng cho việc xây dựng mô hình lá gan. Tuy nhiên, khả năng hân đoạn của mô hình CNN còn khá hạn chế trên tập kiểm thử LiTS2017.
 \begin{table}[]
 \begin{tabular}{|c|c|c|c|c|}
 \hline
@@ -96,8 +134,8 @@ Mô hình Unet 3-chiều này được xây dựng dựa trên cơ sở mô hìn
 \item Phương pháp tối ưu: Adam optimizer.
 \item Các siêu tham số: Learning rate 0.0001.
 \end{itemize}
-\paragraph{Kết quả}
-Chúng tôi thực hiện đánh giá mô hình Unet 3-chiều trên tập dữ liệu tương ứng đã sử dụng khi huấn luyện (Ví dụ: Nếu huấn luyện mô hình với dữ liệu được làm giàu từ tập LITS2017 thì sẽ đánh giá trên tập kiểm thử của tập này). Mô hình Unet 3-chiều đã đạt kết quả rất tốt trên cả ba tập SLIVER07 (tập huấn luyện), 3Dircadb batch 1 và LiTS2017 (tập kiểm thử).
+\paragraph{Kết quả phân đoạn}
+Chúng tôi thực hiện đánh giá mô hình Unet 3-chiều trên tập dữ liệu tương ứng đã sử dụng khi huấn luyện (Ví dụ: Nếu huấn luyện mô hình với dữ liệu được làm giàu từ tập LITS2017 thì sẽ đánh giá trên tập kiểm thử của tập này). Mô hình Unet 3-chiều đã đạt kết quả rất tốt trên cả ba tập SLIVER07 (tập huấn luyện), 3Dircadb\_1 và LiTS2017 (tập kiểm thử). 
 \begin{table}[]
 \begin{tabular}{|c|c|c|c|}
 \hline
