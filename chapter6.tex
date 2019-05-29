@@ -71,7 +71,7 @@ Một giải thuật khác để đánh nhãn cho các vùng được trình bà
     \For{$i = 0$ to $m$ }
         \For{$j = 0$ to $n$}
             \If{$A[i,j]$ != $0$}
-                \State $B[i,j]$ = $find(labels[i,j]$
+                \State $B[i,j]$ = $find(labels[i,j])$
             \EndIf
         \EndFor   
     \EndFor
@@ -80,7 +80,7 @@ Một giải thuật khác để đánh nhãn cho các vùng được trình bà
   \end{algorithmic}
 \end{algorithm}
 \section{Loại bỏ khối}
-Với bài toán phân đoạn lá gan, để kết quả có thể sử dụng các thao tác hậu xử lý thì kết quả đó phải đạt tới một mức độ chính xác nhất định. Khi đó trên dữ liệu 3-chiều sẽ có một thành phần liên thông lớn nhất chính là lá gan, còn những thành phần liên thông khác thông thường sẽ không trùng với lá gan vì vậy sẽ bị loại bỏ. Qua thực nghiệm, thao tác loại bỏ các thành phần liên thông khác lớn nhất cho kết quả có độ chính xác cao hơn.\\
+Với bài toán phân đoạn lá gan, để kết quả có thể sử dụng các thao tác hậu xử lý thì kết quả đó phải đạt tới một mức độ chính xác nhất định. Khi đó trên dữ liệu 3-chiều sẽ có một thành phần liên thông lớn nhất chính là lá gan, còn những thành phần liên thông khác thông thường sẽ không trùng với lá gan vì vậy sẽ bị loại bỏ. Qua thực nghiệm, thao tác loại bỏ các thành phần liên thông khác lớn nhất bằng Giải thuật \ref{remove_components} cho kết quả có độ chính xác cao hơn.\\
 \begin{algorithm}
   \caption{Giải thuật của chúng tôi loại bỏ các thành phần nhiễu}\label{remove_components}
   \begin{algorithmic}[1]
@@ -89,10 +89,10 @@ Với bài toán phân đoạn lá gan, để kết quả có thể sử dụng 
     \State Integer $numComponents$ = $0$
     \State $B, numComponents$ = $labels(A)$ \Comment{Sử dụng hàm đánh nhãn ở mục trước}
     \State List<Integer> $counts$
-    \For{$i = 0$ to $numComponents -1$}
-        \State $counts[i]$ = $count_pixel_equal(B, i)$
+    \For{$i = 0$ to $numComponents$ -$1$}
+        \State $counts[i]$ = $count\_pixel\_equal(B, i)$
     \EndFor
-    \State Integer $choose$ = $max(counts)$
+    \State Integer $choose$ = $index\_max(counts)$
     \For{each $P$ in $B$}
         \If{$P$ != $choose$}
             \State $P$ = $0$ \Comment{Gán điểm P là nền}
@@ -106,29 +106,28 @@ Với bài toán phân đoạn lá gan, để kết quả có thể sử dụng 
   \end{algorithmic}
 \end{algorithm}
 
-
-
-\begin{figure*}[h]
+\begin{figure*}
   \centering
-  \subfigure[Một lát cắt dự đoán trước khi hậu xử lý]{%
+    \subfigure[Một lát cắt dự đoán trước khi hậu xử lý.]{%
     \includegraphics[width=0.45\textwidth]{Images/no_fill_result.png}%
     \label{fig:no_post_pro}%
     }
-    \subfigure[Một lát cắt dự đoán sau khi hậu xử lý]{%
+    \subfigure[Một lát cắt dự đoán sau khi hậu xử lý.]{%
     \includegraphics[width=0.45\textwidth]{Images/filled_result.png}%
     \label{fig:post_pro}%
-    }
+    }% 
   \caption{Thay đổi của một dự đoán trước và sau hậu xử lý}
-  \label{fig:ab}
+  \label{fig:post_process}
 \end{figure*}
 
 \section{Lấp đầy khối}
-Sau khi có được kết quả dự đoán, bên cạnh loại bỏ các khối dự đoán nhiễu, chúng tôi thực hiện thao tác lấp đầy khối dự đoán chính là lá gan. Qua thực nghiệm, kết quả dự đoán sau khi được xử lý bằng cách này cho độ chính xác cao hơn và hình ảnh hiển thị rõ ràng hơn. Hiện tại đã có nhiều thư viện của python hỗ trợ thao tác này ví dụ như \textbf{scipy} với hàm \textbf{ndimage.binary\_fill\_holes}. Tuy nhiên, chúng tôi vẫn có một được một giải thuật xử lý thao tác này bằng cách sửa đổi giải thuật \ref{OCAAT}.
+Sau khi có được kết quả dự đoán, bên cạnh loại bỏ các khối dự đoán nhiễu, chúng tôi thực hiện thao tác lấp đầy khối dự đoán chính là lá gan. Qua thực nghiệm, kết quả dự đoán sau khi được xử lý bằng cách này cho độ chính xác cao hơn và hình ảnh hiển thị rõ ràng hơn. Hiện tại đã có nhiều thư viện của python hỗ trợ thao tác này ví dụ như \textbf{scipy} với hàm \textbf{ndimage.binary\_fill\_holes}. Tuy nhiên, chúng tôi vẫn tìm tòi được một giải thuật xử lý thao tác này bằng cách sửa đổi Giải thuật \ref{OCAAT}.
 
 \begin{algorithm}
   \caption{Giải thuật của chúng tôi để lấp đầy khối}\label{OCAAT2}
   \begin{algorithmic}[1]
     \Procedure{fill\_hole}{Array $A[m,n]$}
+    
     \State Array $B[m, n]$ = $1$ \Comment{Khởi tạo ma trận trả về, 1: chưa duyệt}
     \State Queue $q$ \Comment{Khởi tạo queue q rỗng}
     

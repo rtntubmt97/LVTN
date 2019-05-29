@@ -1,7 +1,65 @@
-\chapter{So sánh và đánh giá kết quả hệ thống phân đoạn}
-Để có một nhận định, đánh giá khách quan với hệ thống phân đoạn, chúng tôi đã thực hiện đánh giá trên những tập dữ liệu khác nhau SLIVER07, 3Dircadb,  LiTS2017. Từ đó, chúng tôi đã tổng hợp kết quả, so sánh với những hệ thống phân đoạn khác.
+\chapter{Tổng hợp, so sánh kết quả hệ thống phân đoạn với những phương pháp khác}
+Để có một nhận định, đánh giá khách quan với hệ thống phân đoạn, chúng tôi đã thực hiện đánh giá trên những tập dữ liệu khác nhau SLIVER07, 3Dircadb,  LiTS2017. Từ đó, chúng tôi đã tổng hợp kết quả, so sánh với những hệ thống phân đoạn khác trên cùng tập dữ liệu kiểm thử.
 \section{3D Image Reconstruction for Comparison of Algorithm Database (3Dircadb)}
-Chúng tôi đã thực hiện đánh giả trên 20 ảnh chụp cắt lớp vi tính trên tập3Dircadb\_1. 
+Trong phần này, chúng tôi so sánh kết quả dự đoán của hai mô hình: mạng nơ-ron tích chập 3-chiều (CNN 3D) và TLUnet3D với 20 ảnh chụp cắt lớp vi tính trong tập 3Dircadb\_1. Các kết quả chúng tôi sử dụng để so sánh bao gồm các phương pháp: Duy \cite{Duy_paper}, Chartrand và cộng sự \cite{Chartrand_paper}, Patrick và cộng sự \cite{Patrick_paper}, Qiangguo và cộng sự  \cite{Qiangguo_paper}, Xiaomeng và cộng sự  \cite{Xiaomeng_paper}. Trong đó, phương pháp Chartrand \cite{Chartrand_paper} là phương pháp bán tự động. Các phương pháp còn lại đều là phương pháp tự động. Phương pháp của Duy \cite{Duy_paper} và phương pháp của Patrick và cộng sự\cite{Patrick_paper} đều sử dụng mạng học sâu Unet 2-chiều và sử dụng trường điều kiện ngẫu nhiên (3D Dense CRFs) để thực hiện hậu xử lý. Phương pháp Qiangguo\cite{Qiangguo_paper} và phương pháp Xiaomeng \cite{Xiaomeng_paper} đều sử dụng mạng học sâu Unet 3-chiều với một số biến đổi (RA-UNet và H-DenseUNet) và cả hai phương pháp này đều đạt kết quả rất tốt. Mô hình TLUnet3D (đề xuất) cũng đã đạt được kết quả rất tốt trên tập 3Dircadb. Một số kết quả dự đoán bằng mô hình TLUnet3D đã đạt với 99\%  Dice per case.
+\begin{table}[]
+\begin{adjustwidth}{-1.8cm}{}
+\begin{tabular}{lcccccc}
+\hlineB{6}
+\textbf{Phương pháp} & \textbf{Dice per case} & \textbf{VOE}         & \textbf{RVD}          & \textbf{AvgD}        & \textbf{RMSD}        & \textbf{MaxD}        \\ \hlineB{6}
+Duy \cite{Duy_paper}                 & 94.58 ± \_             & 10.28 ± \_           & \_                    & \_                   & \_                   & \_                   \\ \hline
+Chartrand et al. \cite{Chartrand_paper}            & 97.17 ± \_             & 5.50 ± 1.00          & -0.10 ± 2.40          & 2.00 ± 0.30          & \_                   & \_                   \\ \hline
+Patrick et al. \cite{Patrick_paper}              & 94.3 ± \_              & 10.07 ± \_           & -1.4 ± \_             & 1.5 ± \_             & \_                   & 24 ± \_              \\ \hline
+Qiangguo et al. \cite{Qiangguo_paper}        & 	97.7 ± \_           & 4.50 ± \_          & -0.1 ± \_         & 0.587 ± \_            & \_          & 18.617 ± \_         \\ \hline
+Xiaomeng et al. \cite{Xiaomeng_paper}        & 	98.2 ± 1.00           & 3.57 ± 1.66          & \textbf{0.01 ± 0.02}         & 1.28 ± 2.02         & 3.58 ± 6.58          &  \_         \\ \hlineB{4}
+CNN 3D        & 97.60 ± 0.41           & 4.69 ± 0.79          & -0.24 ± 1.26          & 0.59 ± 0.12          & 1.21 ± 0.35          & 17.42 ± 7.13         \\ \hline
+TLUnet3D         & \textbf{98.69 ± 0.53}  & \textbf{2.58 ± 1.02} & -0.14 ± 0.77 & \textbf{0.26 ± 0.17} & \textbf{0.55 ± 0.30} & \textbf{7.83 ± 7.14} \\ \hlineB{6}
+\end{tabular}
+\caption{\label{tab:compare_3Dircadb}So sánh kết quả 20 bệnh nhân tập dữ liệu 3Dircadb\_1}
+\end{adjustwidth}
+\end{table}
 \section{Segmentation of the Liver 2007 (SLIVER07)}
-
+Chúng tôi đã thực hiện phân đoạn lá gan trên tập kiểm thử của cuộc thi này và gởi kết quả dự đoán đến ban tổ chức cuộc thi để nhận được đánh giá. Tuy nhiên, cuộc thi này đã ngừng hệ thống đánh giá trước khi chúng tôi hoàn thành mô hình TLUnet3D. Vì vậy, chúng tôi chỉ nhận được kết quả đánh giá phân đoạn trên hai mô hình 2-chiều và mô hình nơ-ron tích chập 3-chiều (CNN 3D). Bảng \ref{tab:compare_SLIVER07} cho thấy so sánh đánh giá kết quả dự đoán với những phương pháp tốt nhất, bao gồm: Maklad và cộng sự \cite{Maklad_paper}, Beichel và cộng sự \cite{Beichel_paper}, Afifi và Nakaguchi \cite{Afifi_paper}, Peng và cộng sự \cite{Peng_paper} \cite{Peng_Wang_paper} \cite{Peng_Dong_paper}, Kainmuller và cộng sự \cite{Kainmuller_paper}, Wimmer và cộng sự \cite{Wimmer_paper}, Qi Dou và cộng sự \cite{dsn_paper}. Ngoài "Final Score", chi tiết về trung bình của tất cả năm độ đo cũng được liệt kê. Phương pháp của Beichel \cite{Beichel_paper} là phương pháp thủ công (tương tác), đòi hỏi trung bình 16 phút cho mỗi mẫu dữ liệu. Năm phương pháp bao gồm Maklad \cite{Maklad_paper}, Afifi \cite{Afifi_paper}, Peng \cite{Peng_Wang_paper}, Peng \cite{Peng_Dong_paper}, Wimmer \cite{Wimmer_paper} đều là phương pháp bán tự động với những yêu cầu khác nhau trong tương tác. Những tương tác này bao gồm rất nhiều bước để xác định được những đặc trưng như lá lách, mạch máu, phân loại mạch máu gan hoặc mạch máu không phải của gan. Ngoài ra, phương pháp  Peng \cite{Peng_paper}, Kainmuller \cite{Kainmuller_paper}, Qi Dou \cite{dsn_paper}, và các phương pháp của chúng tôi đều là phương pháp tự động. Phương pháp Peng \cite{Peng_paper} sử dụng kỹ thuật Graph-Cut. Phương pháp Kainmuller \cite{Kainmuller_paper} dựa trên kỹ thuật "Support Vector Machine". Và phương pháp Qi Dou \cite{dsn_paper} chính là phương pháp chúng tôi đã tham khảo cho mô hình CNN 3D. Ngoài kỹ thuật sử dụng mạng nơ-ron học sâu thì phương pháp này còn sử dụng trường điều kiện ngẫu nhiên (3D Dense CRFs) để thực hiện hậu xử lý. Kỹ thuật CRFs này đòi hỏi rất nhiều bộ nhớ cũng như thời gian tính toán để thực hiện.
+\begin{table}[]
+\begin{adjustwidth}{-1.8cm}{}
+\begin{tabular}{lcccccc}
+\hlineB{6}
+\textbf{Phương pháp}                            & \textbf{Score} & \textbf{VOE} & \textbf{RVD} & \textbf{AvgD} & \textbf{RMSD} & \textbf{MaxD} \\ \hlineB{6}
+Maklad et al \cite{Maklad_paper}                                          & \textbf{85.7 ± 2.5}     & \textbf{4.33 ± 0.69}  & \textbf{0.28 ± 0.82}  & \textbf{0.63 ± 0.15}   & \textbf{1.19 ± 0.26}   & \textbf{14.01 ± 2.73}  \\ \hline
+Beichel et al. \cite{Beichel_paper}                                         & 82.1 ± 2.8     & 5.18 ± 0.89  & 0.96 ± 1.62  & 0.79 ± 0.18   & 1.43 ± 0.36   & 15.69 ± 3.30  \\ \hline
+Afifi et al. \cite{Afifi_paper}                                           & 81.7 ± 3.8     & 5.03 ± 0.87  & 1.83 ± 1.24  & 0.74 ± 0.16   & 1.52 ± 0.38   & 16.59 ± 3.89  \\ \hline
+Peng et al. \cite{Peng_paper}                                            & 83.4 ± 3.1     & 4.58 ± 0.51  & 1.08 ± 0.80  & 0.68 ± 0.14   & 1.45 ± 0.36   & 16.88 ± 3.68  \\ \hline
+Peng et al. \cite{Peng_Wang_paper}                                            & 80.6 ± 3.5     & 5.45 ± 0.82  & 1.03 ± 1.61  & 0.82 ± 0.14   & 1.68 ± 0.40   & 18.59 ± 4.31  \\ \hline
+Peng et al. \cite{Peng_Dong_paper}                                            & 80.0 ± 4.0     & 6.07 ± 1.13  & -0.04 ± 2.15 & 0.92 ± 0.23   & 1.61 ± 0.44   & 16.82 ± 2.32  \\ \hline
+Kainmuller et al. \cite{Kainmuller_paper}                                      & 77.3 ± 8.9     & 6.09 ± 2.02  & -2.86 ± 2.76 & 0.95 ± 0.33   & 1.87 ± 0.76   & 18.69 ± 8.02  \\ \hline
+Wimmer et al. \cite{Wimmer_paper}                                          & 76.8 ± 3.8     & 6.47 ± 0.92  & 1.04 ± 2.67  & 1.02 ± 0.16   & 2.0 ± 0.35    & 18.32 ± 4.66  \\ \hline
+Qi Dou et al. \cite{dsn_paper}                                          & \_             & 5.42 ± 0.72  & 1.75 ± 1.77  & 0.79 ± 0.14   & 1.64 ± 0.34   & 33.55 ± 19.64 \\ \hlineB{4}
+Model 2D  & 71.51 ± 11.25  & 6.63 ± 2.02  & -0.31 ± 4.02        & 1.15 ± 0.45   & 2.64 ± 1.36   & 26.49 ± 13.47 \\ \hline
+CNN 3D  & 79.89 ± 4.57   & 5.58 ± 0.90  & -0.19 ± 1.34 & 0.86 ± 0.14   & 1.77 ± 0.53   & 20.79 ±  7.94 \\ \hlineB{6}
+\end{tabular}
+\caption{\label{tab:compare_SLIVER07}So sánh kết quả 10 bệnh nhân trên tập dữ liệu kiểm thử SLIVER07}
+\end{adjustwidth}
+\end{table}
 \section{Liver Tumor Segmentation Challenge (LITS2017)}
+Hiện nay, Liver Tumor Segmentation Challenge Open Leaderboard \cite{website:LiTS_learderboard}  đã đánh giá được rất nhiều kết quả phân đoạn gan và khối u. Tuy nhiên, chúng tôi chỉ liệt kê những kết quả của những phương pháp có bài báo công khai, bao gồm: Bi và cộng sự  \cite{Lei_paper}, Kaluva và cộng sự  \cite{Krishna_paper}, Qiangguo và cộng sự  \cite{Qiangguo_paper}, Xiaomeng và cộng sự  \cite{Xiaomeng_paper} . Ngoài ra, chúng tôi sẽ so sánh với phương pháp Nhật và Sơn \cite{Beichel_paper}. Tất cả những phương pháp phân đoạn lá gan chúng tôi đã liệt kê trong phần này đều là phương pháp tự động hoàn toàn và  sử dụng mô hình mạng học sâu. Kaluva và cộng sự  \cite{Krishna_paper} đã sử dụng mạng Unet 2-chiều và đạt 92.30 \% Dice global. Phương pháp của Kaluva và cộng sự  \cite{Krishna_paper}, phương pháp Nhật và Sơn \cite{Beichel_paper} dùng mạng học sâu với kiến trúc Resnet 2-chiều đã đạt kết quả khả quan hơn với 96.50 \% Dice global. Những phương pháp còn lại, Qiangguo và cộng sự  \cite{Qiangguo_paper}, Xiaomeng và cộng sự  \cite{Xiaomeng_paper} đều là phương pháp sử dụng kiến trúc giống với Unet 3-chiều và đạt được kết quả rất tốt với 96.50\% và 96.30\% Dice global. Mô hình TLUnet3D của chúng tôi cũng đã đạt kết quả dự đoán rất tốt trong thử thách này với 96.60\% Dice global và nằm trong Top 5 Dice Global, Top 7 Dice per case trên LITS2017 Open Leaderboard \cite{website:LiTS_learderboard}.
+
+\begin{table}[]
+\begin{adjustwidth}{-0.2cm}{}
+\begin{tabular}{lccccccc}
+\hlineB{6}
+\textbf{Phương pháp} & \textbf{Dice global} & \textbf{Dice per case} & \textbf{VOE} & \textbf{RVD} & \textbf{AvgD} & \textbf{RMSD} & \textbf{MaxD} \\ \hlineB{6}
+Bi et al. \cite{Lei_paper}            & \_                   & 95.90                  & 7.80         & \_           & \_            & \_            & \_            \\ \hline
+Kaluva et al. \cite{Krishna_paper}        & 92.30                & 91.20                  & 15.00        & -0.80         & 6.47          & \_            & 45.93         \\ \hline
+Qiangguo et al. \cite{Qiangguo_paper}      & 96.30                & 96.10                  & 7.40         & 0.20          & 1.21         & 2.81          & 26.95        \\ \hline
+Xiaomeng et al.  \cite{Xiaomeng_paper}      & 96.50                & 96.10                  & 7.40        & -1.80       & 1.45         & \_            & 27.12        \\ \hline
+Nhat et al. \cite{Beichel_paper}          & 96.50                & 96.10                  & 7.40         & -2.30        & \_            & \_            & \_            \\ \hlineB{4}
+CNN 3D     & 95.80                & 95.30                  & 8.80         & 2.60         & 1.44          & 2.82          & 24.94         \\ \hline
+TLUnet3D   & 96.60                & 96.00                  & 7.60         & 2.00          & 1.20          & 2.54          & 23.92         \\ \hlineB{6}
+\end{tabular}
+\caption{\label{tab:compare_SLIVER07}So sánh kết quả 70 bệnh nhân trên tập dữ liệu kiểm thử LITS2017}
+\end{adjustwidth}
+\end{table}
+\section{Mô hình đề xuất}
+Trên đây là kết quả so sánh giữa các mô hình của chúng tôi với các mô hình khác đã được công bố công khai. Qua các kết quả này, chúng tôi đề xuất mô hình TLUnet3D là mô hình tốt nhất mà qua luận văn này chúng tôi nghiên cứu được.
+
+

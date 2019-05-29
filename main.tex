@@ -11,12 +11,15 @@
 \usepackage[english,spanish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{float}
+\usepackage{changepage}
 %\usepackage{times}
 %\usepackage{graphicx}
 
 \usepackage{mathptmx}	% same Time New Roma
 %\renewcommand{\rmdefault}{phv} % Arial
 %\renewcommand{\sfdefault}{phv} % Arial
+\usepackage{adjustbox}
+\usepackage{lscape}
 
 \usepackage{fancyhdr}
 \usepackage{array}
@@ -51,7 +54,14 @@
 
 \usepackage{bkthesis}
 
+\makeatletter
+\renewcommand{\ALG@name}{Giải thuật}
+\makeatother
 
+\makeatletter 
+\renewcommand\thealgorithm{\thechapter.\arabic{algorithm}} 
+\@addtoreset{algorithm}{chapter} 
+\makeatother
 
 
 \crname{LUẬN VĂN TỐT NGHIỆP}

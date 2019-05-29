@@ -1,8 +1,26 @@
 \chapter{Tổng kết}
-\section{Luồng xử lý dữ liệu hoàn chỉnh}
-\section{Ưu điểm}
-\section{Nhược điểm}
-\section{Hướng phát triển}
+% \section{Luồng xử lý dữ liệu hoàn chỉnh}
+\section{Kết quả đạt được}
+Với nỗ lực của các thành viên trong nhóm, đề tài đã đạt được những kết quả khả quan:
+\begin{itemize}
+    \item Phân đoạn gan: Đề tài đã xây dựng thành công một mô hình phân đoạn gan với độ chính xác rất cao, sẽ là công cụ hỗ trợ rất tốt cho việc xem ảnh chụp CT và chuẩn đoán các bệnh trên gan của các bác sĩ, đồng thời làm tiền đề để xây dựng mô hình phát hiện các bất thường trong lá gan từ ảnh CT.
+    \item Các giải thuật tiền, hậu xử lý dữ liệu: Đề tài cũng cung cấp được các giải thuật về tiền và hậu xử lý dữ liệu khi huấn luyện. Tiền xử lý giúp việc huấn luyện thuận lợi và hậu xử lý giúp cho kết quả hiển thị được mượt mà hơn. Các giải thuật này cũng góp phần đáng kể trong việc tăng độ chính xác cho toàn mô hình. Đồng thời các đề tài khác cũng có thể áp dụng với một vài chỉnh sửa nhỏ tùy vào tập dữ liệu.
+    \item Làm giàu dữ liệu: Đề tài cung cấp các giải thuật làm giàu bộ dữ liệu ảnh y khoa, làm cho mô hình dự đoán chính xác hơn, tránh overfitting. Các tập dữ liệu có nhãn hiếm hoi của những đề tài khác có thể áp dụng được những giải thuật này hoặc dựa vào đó để phát triển thêm các phương án làm giàu khác tùy thích, từ đó một phần giải quyết vấn đề khan hiếm dữ liệu có nhãn trong lĩnh vực học sâu.
+    \item Đánh giá trên nhiều tập dữ liệu: Đề tài này sử dụng cả 3 tập dữ liệu có nhãn phổ biến nhất về lá gan từ trước đến nay để đánh giá độ chính xác của mô hình mà nhóm xây dựng đó là 3Dircadb, SLIVER07 và LITS2017. Trong đó tập 3Dircadb đạt độ chính xác gần 99\% với độ đo ``Dice per case``, tập SLIVER07 xếp hạng tối thiểu là thứ 16 (kết quả này cho mô hình trước đó, sau này không cho submit vì không có paper công khai) với điểm số trung bình là 79.89 trên ``SLIVER07 Grand Challenge 2007`` và tập LITS2017 đạt top 5 tại ``Liver Tumor Segmentation Challenge 2017``. Đây đều là những kết quả đạt được khá ấn tượng.
+    \item Xây dựng ứng dụng hiển thị: Cuối cùng, đề trực quan hóa kết quả đạt được, nhóm đã xây dựng được một ứng dụng cho phép đăng tải dữ liệu ảnh CT và nhận kết quả phân đoạn đồng thời hiển thị mô hình 3D và tính thể tích gan tương ứng cho dữ liệu đó. Tất cả các kết quả đều được hiển thị trên giao diện web - hiện nay là phương án tiếp cận phổ biến, dễ sử dụng, dễ tuỳ chỉnh và hiệu quả nhất cho các ứng dụng nhỏ.
+\end{itemize}
+\section{Hạn chế và hướng phát triển}
+Tuy kết quả của đề tài này thực sự rất tốt với những yêu cầu đã đề ra ban đầu, nhưng vẫn còn một số hạn chế như sau:
+\begin{itemize}
+    \item Đề tài này cần kết hợp với những đề tài khác như phân đoạn mạch máu và dự đoán bất thường trong gan, khi đó mới đem lại ý nghĩa thực tiễn to lớn trong việc xem và chuẩn đoán các bệnh về gan của các bác sĩ, đồng thời giúp các bác sĩ ra quyết định trong việc cắt và ghép lá gan qua ảnh CT (điều này nhóm nhận ra qua buổi hướng dẫn của các bác sĩ tại Bệnh viện Đại học Y Dược).
+    \item Ứng dụng xây dựng chỉ áp dụng cho tập dữ liệu có định dạng ảnh CT chuẩn có thể đọc được bằng thư viện SimpleItk như mhd|raw, nii, niiz.
+\end{itemize}
+Với những nhược điểm và những yêu cầu hiện ở thời điểm hiện tại, nhóm đề xuất một số hướng phát triển cho đề tài này.
+\begin{itemize}
+    \item Kết hợp với mô hình phân đoạn mạch máu trong gan thành một mô hình phân đoạn cả gan lẫn mạch máu hoàn chỉnh (vì mạch máu nằm trong gan nên kết hợp hai mô hình một lúc sẽ đem lại kết quả tốt hơn việc chạy riêng biệt hai mô hình và lấy 2 kết quả ghép lại).
+    \item Xây dựng ứng dụng hiển thị kết quả phân đoạn và mô hình 3D cho hệ thống gan - mạch máu hoàn chỉnh.
+    \item Xây dựng mô hình tương tự để phân đoạn những cơ quan khác trong cơ thể từ ảnh CT.
+\end{itemize}
 
 
 
